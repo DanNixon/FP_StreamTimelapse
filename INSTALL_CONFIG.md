@@ -15,6 +15,8 @@ Configure streaming_timelapse
 
 
 For both 1 and 2, options are passed to the ```raspistill``` command and control the image size and effects/filters.
--n = no preview
--h, -w = height and width
--tl = timelapse interval, in this case this is used to update the ```s_frame.jpg``` file which is used for the MJPEG stream
+
+- -n = no preview
+- -h, -w = height and width
+- -tl = timelapse interval, in this case this is used to update the ```s_frame.jpg``` file which is used for the MJPEG stream
+- Full raspicam docs [here](https://github.com/raspberrypi/userland/blob/master/host_applications/linux/apps/raspicam/README.md)
