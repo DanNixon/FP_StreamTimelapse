@@ -3,8 +3,16 @@ FP_StreamTimelapse
 
 Timelapse recorder for BubbleScope with MJPEG streaming to run on the RasPi.
 
+Requirements
+------------
+
+1.  OpenCV (tested with 2.4)
+2.  RaspiStill
+3.  cmake
+
+
 Installation/Usage
-==================
+-----------------
 
 1.  Clone repo onto Pi
 2.  Set path to folder in start_timelapse.sh, stop_timelaspe.sh and recovery.sh
@@ -13,7 +21,7 @@ Installation/Usage
 5.  Options for configuring timelaspe timing are in start_timelapse.sh
 
 Notes
-=====
+----
 
 In case of power failure the script should restart timelapse capture from the last image saved (with possible corruption of one original image and 0-5 equi images).
 
