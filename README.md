@@ -11,15 +11,6 @@ Requirements
 3.  cmake
 
 
-Installation/Usage
------------------
-
-1.  Clone repo onto Pi
-2.  Set path to folder in start_timelapse.sh, stop_timelaspe.sh and recovery.sh
-3.  Optionally set crontab to launch on boot
-4.  Options for configuring camera settings are in streaming_timelapse/main/cpp
-5.  Options for configuring timelaspe timing are in start_timelapse.sh
-
 Notes
 ----
 
