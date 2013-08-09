@@ -1,0 +1,3 @@
+crontab -e -u pi
+
+@reboot /home/pi/stream_tl/start_timelapse.sh 10 >> /home/pi/stream_tl/cron_tl.log

@@ -1,0 +1,1 @@
+/home/pi/stream_tl/streaming_timelapse/CMakeFiles/streaming_timelapse.dir
