@@ -11,18 +11,18 @@ Installation
 Configure timelapse
 -------------------
 
-4.  Configure delay between timelapse captures, this is set in [start_timelapse.sh](https://github.com/DanNixon/FP_StreamTimelapse/blob/master/start_timelapse.sh#L22), by default it is set to 5000ms.
-
+4.  Configure delay between timelapse captures, this is set in [start_timelapse.sh](https://github.com/DanNixon/FP_StreamTimelapse/blob/master/stream_tl/start_timelapse.sh#L22), by default it is set to 5000ms.
+5.	Configure timelapse image filenames, this can be set in [start_timelapse.sh](https://github.com/DanNixon/FP_StreamTimelapse/blob/master/stream_tl/start_timelapse.sh#L22), where ```%d``` is the frame number (this is very important, if the filename does not have a %d the same file will be overwritten every capture)
 
 Configure streaming_timelapse
 -----------------------------
 
-5.	Configure timelapse camera options ( [main.cpp L17](https://github.com/DanNixon/FP_StreamTimelapse/blob/master/streaming_timelapse/main.cpp#L17) )
-6.	Configure MJPG stream camera options ( [main.cpp L18](https://github.com/DanNixon/FP_StreamTimelapse/blob/master/streaming_timelapse/main.cpp#L18) )
-7.	Configure misc timelapse options ( [main.cpp L19-20](https://github.com/DanNixon/FP_StreamTimelapse/blob/master/streaming_timelapse/main.cpp#L19) )
+6.	Configure timelapse camera options ( [main.cpp L17](https://github.com/DanNixon/FP_StreamTimelapse/blob/master/stream_tl/streaming_timelapse/main.cpp#L17) )
+7.	Configure MJPG stream camera options ( [main.cpp L18](https://github.com/DanNixon/FP_StreamTimelapse/blob/master/stream_tl/streaming_timelapse/main.cpp#L18) )
+8.	Configure misc timelapse options ( [main.cpp L19-20](https://github.com/DanNixon/FP_StreamTimelapse/blob/master/stream_tl/streaming_timelapse/main.cpp#L19) )
 	-	min_tl_delay = having a timelapse period too low reduced stream consistency, a minimum helps prevent that
 	-	tl_cap_run_in = time camera module is running for before capturing a timelapse image, improves consistency of exposure
-8.	Configure equi. image generation ( [main.cpp L42](https://github.com/DanNixon/FP_StreamTimelapse/blob/master/streaming_timelapse/main.cpp#L42) )
+9.	Configure equi. image generation ( [main.cpp L42](https://github.com/DanNixon/FP_StreamTimelapse/blob/master/stream_tl/streaming_timelapse/main.cpp#L42) )
 	-	Parameters same as general equi. generation
 
 Optional Stuff
