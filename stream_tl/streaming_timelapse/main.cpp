@@ -99,20 +99,32 @@ int main(int argc, char **argv)
 
     while(run)
     {
-	//Generate filename and capture timelapse image in stills mode
-        char frame_fn[50];
-        sprintf(frame_fn, filename, frame);
-        char tl_captrue_cmd[100];
-        sprintf(tl_captrue_cmd, "raspistill -o %s/original/%s.jpg -t %d %s", save_path, frame_fn, tl_cap_run_in, rs_tl_args);
+    	//Assume we are good to capture
+    	int capture_now = 1;
+    	
+    	#ifdef USE_GPS
+    	//Do GPS position schecking here
+    	//add GPS EXIFs to rs_tl_args
+    	#endif
+    	
+    	//If conditions for capture are met
+    	if(capture_now)
+    	{
+	    //Generate filename and capture timelapse image in stills mode
+            char frame_fn[50];
+            sprintf(frame_fn, filename, frame);
+            char tl_captrue_cmd[100];
+            sprintf(tl_captrue_cmd, "raspistill -o %s/original/%s.jpg -t %d %s", save_path, frame_fn, tl_cap_run_in, rs_tl_args);
 
-        cout<<"Starting timelapse capture"<<endl;
-        system(tl_captrue_cmd);
-        cout<<"Timelapse capture end"<<endl;
+            cout<<"Starting timelapse capture"<<endl;
+            system(tl_captrue_cmd);
+            cout<<"Timelapse capture end"<<endl;
 
-	//Start thread to convert image (~900ms for conversion)
-        pthread_t proc_thread_id;
-        int thread_state = pthread_create(&proc_thread_id, NULL, process_image, frame_fn);
-        if(thread_state) cout<<"Post-processing failure:"<<thread_state<<endl<<"Manual post-processing needed.\n"<<endl;
+	    //Start thread to convert image (~900ms for conversion)
+            pthread_t proc_thread_id;
+            int thread_state = pthread_create(&proc_thread_id, NULL, process_image, frame_fn);
+            if(thread_state) cout<<"Post-processing failure:"<<thread_state<<endl<<"Manual post-processing needed.\n"<<endl;
+    	}
 
 	//Start camera in timelapse mode to generate stream images
         char stream_capture_cmd[100];
