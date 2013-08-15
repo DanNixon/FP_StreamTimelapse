@@ -11,4 +11,5 @@ Requirements
 3.  cmake
 4.	Camera module adapted for variable focus (glue on lens screw removed)
 5.	"Large" SD card (timelapse capturing every minute should run for 7 days happily on a 32GB card)
-6.  [mjpg-streamer](http://sourceforge.net/projects/mjpg-streamer/)
+6. [mjpg-streamer](http://sourceforge.net/projects/mjpg-streamer/)
+7. gpsd

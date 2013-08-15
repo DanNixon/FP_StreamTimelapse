@@ -107,10 +107,11 @@ int main(int argc, char **argv)
     	//add GPS EXIFs to rs_tl_args
     	#endif
     	
+    	pthread_t proc_thread_id;
     	//If conditions for capture are met
     	if(capture_now)
     	{
-	    //Generate filename and capture timelapse image in stills mode
+			//Generate filename and capture timelapse image in stills mode
             char frame_fn[50];
             sprintf(frame_fn, filename, frame);
             char tl_captrue_cmd[100];
@@ -120,13 +121,12 @@ int main(int argc, char **argv)
             system(tl_captrue_cmd);
             cout<<"Timelapse capture end"<<endl;
 
-	    //Start thread to convert image (~900ms for conversion)
-            pthread_t proc_thread_id;
+			//Start thread to convert image (~900ms for conversion)
             int thread_state = pthread_create(&proc_thread_id, NULL, process_image, frame_fn);
             if(thread_state) cout<<"Post-processing failure:"<<thread_state<<endl<<"Manual post-processing needed.\n"<<endl;
     	}
 
-	//Start camera in timelapse mode to generate stream images
+		//Start camera in timelapse mode to generate stream images
         char stream_capture_cmd[100];
         sprintf(stream_capture_cmd, "raspistill -o %s -t %d %s", frame_location,  (delay - tl_cap_run_in), rs_strm_args);
 
@@ -134,7 +134,7 @@ int main(int argc, char **argv)
         system(stream_capture_cmd);
         cout<<"Streaming capture end"<<endl;
 
-	//Check if frame has reached capture limit
+		//Check if frame has reached capture limit
         frame++;
         if(run)
         {
@@ -142,15 +142,15 @@ int main(int argc, char **argv)
             else run = 1;
         }
 
-	//Stop if needed
+		//Stop if needed
         if(!run)
         {
-	    //If stopping, wait for images to process
-            pthread_join(proc_thread_id, NULL);
+			//If stopping, wait for images to process
+            if(capture_now) pthread_join(proc_thread_id, NULL);
             break;
         }
-	//Deallocate resources for terminated processing threads
-        pthread_detach(proc_thread_id);
+		//Deallocate resources for terminated processing threads
+        if(capture_now) pthread_detach(proc_thread_id);
     }
 
     //Delete the frame image used for streaming
