@@ -34,16 +34,16 @@ void terminate(int arg)
     run = 0;
 }
 
-float haversine(float lat1, float long1, float lat2, flaot long2)
+float haversine(float lat1, float long1, float lat2, float long2)
 {
-	d_lat = (lat2 - lat1) * DEG_2_RAD;
-	d_long = (long2 - long1) * DEG_2_RAD
-	a = pow(sin(d_lat / 2), 2) + cos(lat1 * DEG_2_RAD) * cos(lat2 * DEG_2_RAD) * pow(sin(d_long / 2), 2)
-	c = 2 * atan2(sqrt(a), sqrt(1 - a))
+	float d_lat = (lat2 - lat1) * DEG_2_RAD;
+	float d_long = (long2 - long1) * DEG_2_RAD;
+	float a = pow(sin(d_lat / 2), 2) + cos(lat1 * DEG_2_RAD) * cos(lat2 * DEG_2_RAD) * pow(sin(d_long / 2), 2);
+	float c = 2 * atan2(sqrt(a), sqrt(1 - a));
 	#ifdef DIST_MI
-	return 3956 * c
+	return 3956 * c;
 	#endif
-	return 6367 * c
+	return 6367 * c;
 }
 
 //Thread to handle equi. image generation
@@ -80,7 +80,7 @@ int main(int argc, char **argv)
     char *filename = argv[2];
     sscanf(argv[3], "%d", &delay);
     sscanf(argv[4], "%d", &f_count);
-    sscanf(argv[5], "%d", &min_cap_dist);
+    sscanf(argv[5], "%f", &min_cap_dist);
 
     cout<<"Timelapse capture delay: "<<delay<<"ms"<<endl;
     cout<<"Requested frames (0=infinate): "<<f_count<<endl;
