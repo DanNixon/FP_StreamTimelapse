@@ -19,9 +19,13 @@ const char *rs_strm_args = "-tl 200 -n -th 0:0:0 -w 1000 -h 1000 -awb off -ex of
 const int min_tl_delay = 2000; //>500
 const int tl_cap_run_in = 80; //>50, delay between starting camera in stills mode and taking image
 const char *frame_location = "s_frame.jpg";
+const char *gps_temp_location = "gpsdata.log";
+const float min_cap_dist = 0.1; //Minimum distance that must be traveled before another timelapse image will be captured, units defined in get_gps.py
 
 char *save_path;
 int run;
+float last_lat = 0.0f;
+float last_long = 0.0f;
 
 void terminate(int arg)
 {
@@ -50,6 +54,10 @@ void *process_image(void *arg)
 
 int main(int argc, char **argv)
 {
+	#ifdef USE_GPS
+	cout<<"Using GPS"<<endl;
+	#endif
+
     //Handle SIGTERM for safe shutdown
     cout<<"Send SIGTERM to terminate, SIGINT (Ctrl+C) may kill MMAL"<<endl;
     signal(SIGTERM, terminate);
@@ -78,6 +86,14 @@ int main(int argc, char **argv)
     int e_folder_cmd_state = system(e_folder_cmd);
     cout<<"Create equi folder: "<<e_folder_cmd_state<<endl;
 
+    #ifdef USE_GPS
+    //Create folder for GPS data
+    char g_folder_cmd[50];
+    sprintf(g_folder_cmd, "mkdir %s/gps", save_path);
+    int g_folder_cmd_state = system(g_folder_cmd);
+    cout<<"Create GPS folder: "<<g_folder_cmd_state<<endl;
+    #endif
+
     //Get number of existing images, so as not to overwrite images in loss of power
     char file_count_cmd[50];
     sprintf(file_count_cmd, "ls %s/original | wc -l", save_path);
@@ -101,12 +117,57 @@ int main(int argc, char **argv)
     {
     	//Assume we are good to capture
     	int capture_now = 1;
-    	
+    	char *gps_exif = "";
+
     	#ifdef USE_GPS
-    	//Do GPS position schecking here
-    	//add GPS EXIFs to rs_tl_args
+    	float current_lat;
+    	float current_long;
+    	float delta_dist;
+
+		//Get current GPS position
+    	char gps_get_cmd[50];
+		sprintf(gps_get_cmd, "python get_gps.py %s", gps_temp_location);
+		FILE *gps_get_reader = popen(gps_get_cmd, "r");
+		fscanf(gps_get_reader, "%f %f", &current_lat, &current_long);
+		pclose(gps_get_reader);
+		cout<<"Current position: "<<current_lat<<", "<<current_long<<endl;
+
+    	//Calculate distance traveled since last capture
+    	char haversine_cmd[50];
+		sprintf(haversine_cmd, "python haversine.py %f %f %f %f", last_lat, last_long, current_lat, current_long);
+		FILE *haversine_reader = popen(haversine_cmd, "r");
+		fscanf(haversine_reader, "%f", &delta_dist);
+		pclose(haversine_reader);
+		cout<<"Delta dist: "<<delta_dist<<endl;
+
+		//Check if have moved far enough
+		if(delta_dist < min_cap_dist)
+		{
+			capture_now = 0;
+			cout<<"Will not capture a frame here, haven't moved enough since last capture"<<endl;
+		}
+		else
+		{
+			//Add GPS EXIFs to raw timelapse frame capture
+			//gps_exif = (char *) malloc(100);
+			//sprintf(gps_exif, "--exif GPS.GPSLatitude=%f --exif GPS.GPSLongitude=%f", current_lat, current_long);
+			//TODO: Get other values (alt, track, speed) here and format lat/lon properly
+			//		Possibly use other tool, RaspiCam seems to want lat/lon in DMS
+
+			//Set current position as last position
+			last_lat = current_lat;
+			last_long = current_long;
+
+			//Move GPS log file to timelapse GPS folder
+			char gps_fn[50];
+            sprintf(gps_fn, filename, frame);
+			char gps_mv_cmd[50];
+			sprintf(gps_mv_cmd, "mv %s %s/gps/%s_g.log", gps_temp_location, save_path, gps_fn);
+			int gps_mv_cmd_state = system(gps_mv_cmd);
+			cout<<"Move GPS data file: "<<gps_mv_cmd_state<<endl;
+		}
     	#endif
-    	
+
     	pthread_t proc_thread_id;
     	//If conditions for capture are met
     	if(capture_now)
@@ -115,7 +176,7 @@ int main(int argc, char **argv)
             char frame_fn[50];
             sprintf(frame_fn, filename, frame);
             char tl_captrue_cmd[100];
-            sprintf(tl_captrue_cmd, "raspistill -o %s/original/%s.jpg -t %d %s", save_path, frame_fn, tl_cap_run_in, rs_tl_args);
+            sprintf(tl_captrue_cmd, "raspistill -o %s/original/%s.jpg -t %d %s %s", save_path, frame_fn, tl_cap_run_in, rs_tl_args, gps_exif);
 
             cout<<"Starting timelapse capture"<<endl;
             system(tl_captrue_cmd);
@@ -158,6 +219,12 @@ int main(int argc, char **argv)
     sprintf(rm_frame_cmd, "rm %s", frame_location);
     int rm_frame_cmd_state = system(rm_frame_cmd);
     cout<<"Delete frame image: "<<rm_frame_cmd_state<<endl;
+
+    //Delete temporary GPS data
+    char rm_gps_cmd[50];
+    sprintf(rm_gps_cmd, "rm %s", gps_temp_location);
+    int rm_gps_cmd_state = system(rm_gps_cmd);
+    cout<<"Delete temp GPS data: "<<rm_gps_cmd_state<<endl;
 
     return 0;
 }

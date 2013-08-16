@@ -1,5 +1,6 @@
 cmake_minimum_required (VERSION 2.6)
 project(streaming_timelapse)
+add_definitions(-DUSE_GPS)
 find_package(OpenCV REQUIRED)
 include_directories(.)
 add_executable(streaming_timelapse main.cpp equi_gen_buf.cpp)

@@ -13,3 +13,4 @@ Requirements
 5.	"Large" SD card (timelapse capturing every minute should run for 7 days happily on a 32GB card)
 6. [mjpg-streamer](http://sourceforge.net/projects/mjpg-streamer/)
 7. gpsd
+8. Suitable GPS module compatible with gpsd (e.g. [Adafruit Ultimate GPS](http://www.adafruit.com/products/746))

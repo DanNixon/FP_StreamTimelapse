@@ -1,5 +1,3 @@
 #!/bin/bash
 
-PORT=/dev/ttyUSB0
-
-sudo gpsd $PORT -F /var/run/gpsd.sock
+sudo gpsd /dev/ttyUSB0 -F /var/run/gpsd.sock

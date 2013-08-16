@@ -1,5 +1,8 @@
-import sys, json
+import sys
 from math import *
+
+#Using Haversine algorithm, calculate distance between two lat/lon positions
+#USAGE: python haversine.py lat1 long1 lat2 long2
 
 def haversine(pos1, pos2):
 	lat1 = float(pos1['lat'])
@@ -19,7 +22,7 @@ def haversine(pos1, pos2):
 
 	return {"km":km, "miles":mi}
 
-p1 = json.loads(sys.argv[1])
-p2 = json.loads(sys.argv(2))
+p1 = {"lat":sys.argv[1], "long":sys.argv[2]}
+p2 = {"lat":sys.argv[3], "long":sys.argv[4]}
 hs = haversine(p1, p2)
-print hs
+print hs['km'] #Select miles/km
