@@ -1,6 +1,7 @@
 #include <iostream>
 #include <cstdio>
 #include <cstdlib>
+#include <cmath>
 #include <pthread.h>
 #include <signal.h>
 
@@ -20,7 +21,7 @@ const int min_tl_delay = 2000; //>500
 const int tl_cap_run_in = 80; //>50, delay between starting camera in stills mode and taking image
 const char *frame_location = "s_frame.jpg";
 const char *gps_temp_location = "gpsdata.log";
-const float min_cap_dist = 0.1; //Minimum distance that must be traveled before another timelapse image will be captured, units defined in get_gps.py
+float min_cap_dist = 0.0f; //Minimum distance that must be traveled before another timelapse image will be captured, units defined in haversine.py
 
 char *save_path;
 int run;
@@ -31,6 +32,18 @@ void terminate(int arg)
 {
     cout<<"Got SIGTERM, will now terminate"<<endl;
     run = 0;
+}
+
+float haversine(float lat1, float long1, float lat2, flaot long2)
+{
+	d_lat = (lat2 - lat1) * DEG_2_RAD;
+	d_long = (long2 - long1) * DEG_2_RAD
+	a = pow(sin(d_lat / 2), 2) + cos(lat1 * DEG_2_RAD) * cos(lat2 * DEG_2_RAD) * pow(sin(d_long / 2), 2)
+	c = 2 * atan2(sqrt(a), sqrt(1 - a))
+	#ifdef DIST_MI
+	return 3956 * c
+	#endif
+	return 6367 * c
 }
 
 //Thread to handle equi. image generation
@@ -67,12 +80,14 @@ int main(int argc, char **argv)
     char *filename = argv[2];
     sscanf(argv[3], "%d", &delay);
     sscanf(argv[4], "%d", &f_count);
+    sscanf(argv[5], "%d", &min_cap_dist);
 
     cout<<"Timelapse capture delay: "<<delay<<"ms"<<endl;
     cout<<"Requested frames (0=infinate): "<<f_count<<endl;
     cout<<"Timelaspe raspistill args: "<<rs_tl_args<<endl;
     cout<<"Streaming raspistill args: "<<rs_strm_args<<endl;
     cout<<"Timelapse capture run-in delay: "<<tl_cap_run_in<<"ms"<<endl;
+    cout<<"Minimun capture distance: "<<min_cap_dist<<endl;
 
     //Create folder for raw captures
     char o_folder_cmd[50];
@@ -133,11 +148,7 @@ int main(int argc, char **argv)
 		cout<<"Current position: "<<current_lat<<", "<<current_long<<endl;
 
     	//Calculate distance traveled since last capture
-    	char haversine_cmd[50];
-		sprintf(haversine_cmd, "python haversine.py %f %f %f %f", last_lat, last_long, current_lat, current_long);
-		FILE *haversine_reader = popen(haversine_cmd, "r");
-		fscanf(haversine_reader, "%f", &delta_dist);
-		pclose(haversine_reader);
+		delta_dist = haversine(last_lat, last_long, current_lat, current_long);
 		cout<<"Delta dist: "<<delta_dist<<endl;
 
 		//Check if have moved far enough
@@ -185,6 +196,8 @@ int main(int argc, char **argv)
 			//Start thread to convert image (~900ms for conversion)
             int thread_state = pthread_create(&proc_thread_id, NULL, process_image, frame_fn);
             if(thread_state) cout<<"Post-processing failure:"<<thread_state<<endl<<"Manual post-processing needed.\n"<<endl;
+
+            frame++;
     	}
 
 		//Start camera in timelapse mode to generate stream images
@@ -196,7 +209,6 @@ int main(int argc, char **argv)
         cout<<"Streaming capture end"<<endl;
 
 		//Check if frame has reached capture limit
-        frame++;
         if(run)
         {
             if(f_count) run = !(frame == f_count);
