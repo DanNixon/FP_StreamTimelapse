@@ -17,7 +17,7 @@ using namespace cv;
 
 const char *rs_tl_args = "-n -w 2000 -h 2000 -awb off -ex off -ev -2 -mm average";
 const char *rs_strm_args = "-tl 200 -n -th 0:0:0 -w 1000 -h 1000 -awb off -ex off -ev -4 -mm average";
-const int min_tl_delay = 2000; //>500
+const int min_tl_delay = 500; //>500
 const int tl_cap_run_in = 80; //>50, delay between starting camera in stills mode and taking image
 const char *frame_location = "s_frame.jpg";
 const char *gps_temp_location = "gpsdata.log";

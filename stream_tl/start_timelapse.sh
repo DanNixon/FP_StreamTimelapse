@@ -19,7 +19,7 @@ echo "Starting MJPEG server"
 screen -L -d -m -S mjpg_stream ./mjpg-streamer/start.sh
 echo "Starting capture"
 #ARGS: [output folder] [image name (%d is frame number)] [timelapse delay ms] [capture time ms (0 for capture untill SIGTERM)] [minimum capture distance]
-screen -L -d -m -S stl_capture ./streaming_timelapse/streaming_timelapse tl_images i%d 5000 0 0.1
+screen -L -d -m -S stl_capture ./streaming_timelapse/streaming_timelapse tl_images i%d 1000 0 0.05
 
 sleep 2
 
