@@ -14,3 +14,4 @@ Requirements
 6. [mjpg-streamer](http://sourceforge.net/projects/mjpg-streamer/)
 7. gpsd
 8. Suitable GPS module compatible with gpsd and with fix indicator output (e.g. [Adafruit Ultimate GPS](http://www.adafruit.com/products/746))
+9. [Exiv2](http://www.exiv2.org/index.html) (C++ library for EXIF data read/write)

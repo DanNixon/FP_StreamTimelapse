@@ -34,6 +34,7 @@ int run;
 float last_lat = 0.0f;
 float last_long = 0.0f;
 
+//Safely terminated the application
 void terminate(int arg)
 {
     cout<<"Got SIGTERM, will now terminate"<<endl;
@@ -46,10 +47,8 @@ double haversine(double lat1, double long1, double lat2, double long2)
 	double d_long = (long2 - long1) * DEG_2_RAD;
 	double a = pow(sin(d_lat / 2), 2) + cos(lat1 * DEG_2_RAD) * cos(lat2 * DEG_2_RAD) * pow(sin(d_long / 2), 2);
 	double c = 2 * atan2(sqrt(a), sqrt(1 - a));
-	#ifdef DIST_MI
-	return 3956 * c;
-	#endif
-	return 6367 * c;
+	if(gps_speed_units == 'M') return 3956 * c; //Use miles if speed unit is MPH
+	return 6367 * c; //KM otherwise
 }
 
 //Thread to handle equi. image generation
