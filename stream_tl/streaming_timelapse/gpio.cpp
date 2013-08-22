@@ -1,3 +1,7 @@
+/*
+ * Uses code from: https://github.com/halherta/RaspberryPi-GPIOClass-v1
+ */
+
 #include <fstream>
 #include <string>
 #include <iostream>

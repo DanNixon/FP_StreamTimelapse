@@ -22,7 +22,7 @@ while True:
 					out_file.write(str(report[key]))
 					out_file.write("\n")
 				out_file.close()
-			print report['lat'],report['lon'],report['alt'],report['track']
+			print report['lat'],report['lon'],report['alt'],report['track'],report['speed']
 			break
 	except StopIteration:
 		session = None

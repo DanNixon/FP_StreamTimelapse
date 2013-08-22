@@ -67,7 +67,7 @@ void *process_image(void *arg)
     return NULL;
 }
 
-//Waits for GPS lock, dtermined by output of 3D-FIX pin of GPS reciever
+//Waits for GPS lock, detrmined by output of 3D-FIX pin of GPS reciever
 int wait_for_gps_lock()
 {
 	GPIOClass *fix_pin = new GPIOClass("23"); //Set to GPIO# of 3D-FIX pin
@@ -90,7 +90,7 @@ int wait_for_gps_lock()
 int main(int argc, char **argv)
 {
 	#ifdef USE_GPS
-	cout<<"Using GPS"<<endl;
+	cout<<"Using GPS, waiting for lock..."<<endl;
 	int lock = wait_for_gps_lock();
 	cout<<"Got GPS lock: "<<lock<<endl;
 	#endif
@@ -165,12 +165,14 @@ int main(int argc, char **argv)
 
 	float alt;
 	float track;
+	float speed;
 
 		//Get current GPS position
+		cout<<"Getting GPS location"<<endl;
     	char gps_get_cmd[50];
 		sprintf(gps_get_cmd, "python get_gps.py %s", gps_temp_location);
 		FILE *gps_get_reader = popen(gps_get_cmd, "r");
-		fscanf(gps_get_reader, "%f %f %f %f", &current_lat, &current_long, &alt, &track);
+		fscanf(gps_get_reader, "%f %f %f %f %f", &current_lat, &current_long, &alt, &track, &speed);
 		pclose(gps_get_reader);
 		cout<<"Current position: "<<current_lat<<", "<<current_long<<endl;
 
@@ -187,10 +189,30 @@ int main(int argc, char **argv)
 		else
 		{
 			//Add GPS EXIFs to raw timelapse frame capture
-			//gps_exif = (char *) malloc(100);
-			//sprintf(gps_exif, "--exif GPS.GPSLatitude=%f --exif GPS.GPSLongitude=%f", current_lat, current_long, alt, track);
-			//TODO: Get other values (alt, track, speed) here and format lat/lon properly
-			//		Possibly use other tool, RaspiCam seems to want lat/lon in DMS
+			gps_exif = (char *) malloc(600);
+
+			int lat_d = current_lat;
+			float lat_m_f = 60 * (current_lat - lat_d);
+			int lat_m = abs(lat_m_f);
+			float lat_s_f = 60 * (lat_m_f - lat_m);
+			int lat_s = abs(lat_s_f * 10000);
+
+			int long_d = current_long;
+                        float long_m_f = 60 * (current_long - long_d);
+                        int long_m = abs(long_m_f);
+                        float long_s_f = 60 * (long_m_f - long_m);
+			int long_s = abs(long_m_f * 10000);
+
+			char lat_ref;
+			char lon_ref;
+			if(lat_d >= 0) lat_ref = 'N';
+			else lat_ref = 'S';
+			if(long_d >= 0) lon_ref = 'E';
+			else lon_ref = 'W';
+			lat_d = abs(lat_d);
+			long_d = abs(long_d);
+
+			sprintf(gps_exif, "--exif GPS.GPSLatitude=%d/1,%d/1,%d/10000 --exif GPS.GPSLongitude=%d/1,%d/1,%d/10000 --exif GPS.GPSAltitude=%f --exif GPS.GPSTrack=%f --exif GPS.GPSSpeed=%f --exif GPS.GPSTrackRef=T --exif GPS.GPSLatitudeRef=%c --exif GPS.GPSLongitudeRef=%c", lat_d, lat_m, lat_s, long_d, long_m, long_s, alt, track, speed, lat_ref, lon_ref);
 
 			//Set current position as last position
 			last_lat = current_lat;
@@ -213,11 +235,12 @@ int main(int argc, char **argv)
 			//Generate filename and capture timelapse image in stills mode
             char frame_fn[50];
             sprintf(frame_fn, filename, frame);
-            char tl_captrue_cmd[100];
-            sprintf(tl_captrue_cmd, "raspistill -o %s/original/%s.jpg -t %d %s %s", save_path, frame_fn, tl_cap_run_in, rs_tl_args, gps_exif);
+            char tl_capture_cmd[1000];
+            sprintf(tl_capture_cmd, "raspistill -o %s/original/%s.jpg -t %d %s %s", save_path, frame_fn, tl_cap_run_in, rs_tl_args, gps_exif);
 
             cout<<"Starting timelapse capture"<<endl;
-            system(tl_captrue_cmd);
+		cout<<tl_capture_cmd<<endl;
+            system(tl_capture_cmd);
             cout<<"Timelapse capture end"<<endl;
 
 			//Start thread to convert image (~900ms for conversion)

@@ -1,3 +1,3 @@
 #!/bin/bash
 
-sudo gpsd /dev/ttyUSB0 -F /var/run/gpsd.sock
+sudo gpsd /dev/ttyAMA0 -F /var/run/gpsd.sock
