@@ -2,6 +2,7 @@
 #include <cstdio>
 #include <cstdlib>
 #include <cmath>
+#include <time.h>
 #include <pthread.h>
 #include <signal.h>
 
@@ -9,6 +10,7 @@
 #include <highgui.h>
 
 #include "equi_gen_buf.h"
+#include "gpio.h"
 
 #define DEG_2_RAD 0.0174532925
 
@@ -65,10 +67,32 @@ void *process_image(void *arg)
     return NULL;
 }
 
+//Waits for GPS lock, dtermined by output of 3D-FIX pin of GPS reciever
+int wait_for_gps_lock()
+{
+	GPIOClass *fix_pin = new GPIOClass("23"); //Set to GPIO# of 3D-FIX pin
+	fix_pin->export_gpio();
+	fix_pin->setdir_gpio("in");
+	const long SAMPLE_TIMEOUT = 5000; //Time GPIO must be low to assume a lock (1000<SAMPLE_TIMEOUT<15000)
+	string fix_state;
+	clock_t start_clock = clock();
+	while(1)
+	{
+		clock_t dt = clock() - start_clock;
+		long dt_ms = (((float)dt) / CLOCKS_PER_SEC) * 1000;
+		if(dt_ms >= SAMPLE_TIMEOUT) return 1;
+		fix_pin->getval_gpio(fix_state);
+		if(fix_state == "1") start_clock = clock();
+	}
+	return 1;
+}
+
 int main(int argc, char **argv)
 {
 	#ifdef USE_GPS
 	cout<<"Using GPS"<<endl;
+	int lock = wait_for_gps_lock();
+	cout<<"Got GPS lock: "<<lock<<endl;
 	#endif
 
     //Handle SIGTERM for safe shutdown
@@ -139,11 +163,14 @@ int main(int argc, char **argv)
     	float current_long;
     	float delta_dist;
 
+	float alt;
+	float track;
+
 		//Get current GPS position
     	char gps_get_cmd[50];
 		sprintf(gps_get_cmd, "python get_gps.py %s", gps_temp_location);
 		FILE *gps_get_reader = popen(gps_get_cmd, "r");
-		fscanf(gps_get_reader, "%f %f", &current_lat, &current_long);
+		fscanf(gps_get_reader, "%f %f %f %f", &current_lat, &current_long, &alt, &track);
 		pclose(gps_get_reader);
 		cout<<"Current position: "<<current_lat<<", "<<current_long<<endl;
 
@@ -161,7 +188,7 @@ int main(int argc, char **argv)
 		{
 			//Add GPS EXIFs to raw timelapse frame capture
 			//gps_exif = (char *) malloc(100);
-			//sprintf(gps_exif, "--exif GPS.GPSLatitude=%f --exif GPS.GPSLongitude=%f", current_lat, current_long);
+			//sprintf(gps_exif, "--exif GPS.GPSLatitude=%f --exif GPS.GPSLongitude=%f", current_lat, current_long, alt, track);
 			//TODO: Get other values (alt, track, speed) here and format lat/lon properly
 			//		Possibly use other tool, RaspiCam seems to want lat/lon in DMS
 

@@ -22,9 +22,8 @@ while True:
 					out_file.write(str(report[key]))
 					out_file.write("\n")
 				out_file.close()
-			print report['lat'],report['lon']
-			#print report
+			print report['lat'],report['lon'],report['alt'],report['track']
 			break
 	except StopIteration:
 		session = None
-		print "GPSD has terminated"
+		print "0.0 0.0 0.0 0.0"
