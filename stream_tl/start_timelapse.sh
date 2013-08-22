@@ -4,6 +4,12 @@ cd /home/pi/stream_tl
 
 echo `date -u`
 
+echo "Killing any running GPS daemons"
+sudo killall gpsd
+
+echo "Starting a new GPSD"
+sudo gpsd /dev/ttyAMA0 -F /var/run/gpsd.sock
+
 echo "Removing old frame image"
 rm s_frame.jpg
 
@@ -19,7 +25,7 @@ echo "Starting MJPEG server"
 screen -L -d -m -S mjpg_stream ./mjpg-streamer/start.sh
 echo "Starting capture"
 #ARGS: [output folder] [image name (%d is frame number)] [timelapse delay ms] [capture time ms (0 for capture untill SIGTERM)] [minimum capture distance]
-screen -L -d -m -S stl_capture sudo ./streaming_timelapse/streaming_timelapse tl_images i%d 5000 0 0.0
+screen -L -d -m -S stl_capture ./streaming_timelapse/streaming_timelapse tl_images i%d 5000 0 0.0
 
 sleep 2
 

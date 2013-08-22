@@ -13,6 +13,9 @@
 #include "gpio.h"
 
 #define DEG_2_RAD 0.0174532925
+#define MS1_2_KPH 3.6
+#define MS1_2_MPH 2.23693629
+#define MS1_2_KNOTS 1.94384449
 
 using namespace std;
 using namespace cv;
@@ -24,6 +27,7 @@ const int tl_cap_run_in = 80; //>50, delay between starting camera in stills mod
 const char *frame_location = "s_frame.jpg";
 const char *gps_temp_location = "gpsdata.log";
 float min_cap_dist = 0.0f; //Minimum distance that must be traveled before another timelapse image will be captured, units defined in haversine.py
+const char gps_speed_units = 'M'; //K: K/h, M: MPH, N: Knots
 
 char *save_path;
 int run;
@@ -36,12 +40,12 @@ void terminate(int arg)
     run = 0;
 }
 
-float haversine(float lat1, float long1, float lat2, float long2)
+double haversine(double lat1, double long1, double lat2, double long2)
 {
-	float d_lat = (lat2 - lat1) * DEG_2_RAD;
-	float d_long = (long2 - long1) * DEG_2_RAD;
-	float a = pow(sin(d_lat / 2), 2) + cos(lat1 * DEG_2_RAD) * cos(lat2 * DEG_2_RAD) * pow(sin(d_long / 2), 2);
-	float c = 2 * atan2(sqrt(a), sqrt(1 - a));
+	double d_lat = (lat2 - lat1) * DEG_2_RAD;
+	double d_long = (long2 - long1) * DEG_2_RAD;
+	double a = pow(sin(d_lat / 2), 2) + cos(lat1 * DEG_2_RAD) * cos(lat2 * DEG_2_RAD) * pow(sin(d_long / 2), 2);
+	double c = 2 * atan2(sqrt(a), sqrt(1 - a));
 	#ifdef DIST_MI
 	return 3956 * c;
 	#endif
@@ -159,20 +163,20 @@ int main(int argc, char **argv)
     	char *gps_exif = "";
 
     	#ifdef USE_GPS
-    	float current_lat;
-    	float current_long;
-    	float delta_dist;
+    	double current_lat;
+    	double current_long;
+    	double delta_dist;
 
-	float alt;
-	float track;
-	float speed;
+	double alt;
+	double track;
+	double speed;
 
 		//Get current GPS position
 		cout<<"Getting GPS location"<<endl;
     	char gps_get_cmd[50];
 		sprintf(gps_get_cmd, "python get_gps.py %s", gps_temp_location);
 		FILE *gps_get_reader = popen(gps_get_cmd, "r");
-		fscanf(gps_get_reader, "%f %f %f %f %f", &current_lat, &current_long, &alt, &track, &speed);
+		fscanf(gps_get_reader, "%lf %lf %lf %lf %lf", &current_lat, &current_long, &alt, &track, &speed);
 		pclose(gps_get_reader);
 		cout<<"Current position: "<<current_lat<<", "<<current_long<<endl;
 
@@ -191,28 +195,42 @@ int main(int argc, char **argv)
 			//Add GPS EXIFs to raw timelapse frame capture
 			gps_exif = (char *) malloc(600);
 
-			int lat_d = current_lat;
-			float lat_m_f = 60 * (current_lat - lat_d);
-			int lat_m = abs(lat_m_f);
-			float lat_s_f = 60 * (lat_m_f - lat_m);
-			int lat_s = abs(lat_s_f * 10000);
-
-			int long_d = current_long;
-                        float long_m_f = 60 * (current_long - long_d);
-                        int long_m = abs(long_m_f);
-                        float long_s_f = 60 * (long_m_f - long_m);
-			int long_s = abs(long_m_f * 10000);
-
 			char lat_ref;
-			char lon_ref;
-			if(lat_d >= 0) lat_ref = 'N';
-			else lat_ref = 'S';
-			if(long_d >= 0) lon_ref = 'E';
-			else lon_ref = 'W';
-			lat_d = abs(lat_d);
-			long_d = abs(long_d);
+                        char lon_ref;
+                        if(current_lat > 0) lat_ref = 'N';
+                        else lat_ref = 'S';
+                        if(current_long > 0) lon_ref = 'E';
+                        else lon_ref = 'W';
 
-			sprintf(gps_exif, "--exif GPS.GPSLatitude=%d/1,%d/1,%d/10000 --exif GPS.GPSLongitude=%d/1,%d/1,%d/10000 --exif GPS.GPSAltitude=%f --exif GPS.GPSTrack=%f --exif GPS.GPSSpeed=%f --exif GPS.GPSTrackRef=T --exif GPS.GPSLatitudeRef=%c --exif GPS.GPSLongitudeRef=%c", lat_d, lat_m, lat_s, long_d, long_m, long_s, alt, track, speed, lat_ref, lon_ref);
+			int lat_d = abs(current_lat);
+			double lat_m_f = 60 * (abs(current_lat) - lat_d);
+			int lat_m = lat_m_f;
+			double lat_s_f = 60 * (lat_m_f - lat_m);
+			int lat_s = lat_s_f * 100;
+
+			int long_d = abs(current_long);
+                        double long_m_f = 60 * (abs(current_long) - long_d);
+                        int long_m = long_m_f;
+                        double long_s_f = 60 * (long_m_f - long_m);
+			int long_s = long_s_f * 100;
+
+			int speed_i = speed * 100;
+			switch(gps_speed_units)
+			{
+				case 'N':
+					speed_i *= MS1_2_KNOTS;
+					break;
+				case 'M':
+					speed_i *= MS1_2_MPH;
+					break;
+				case 'K':
+					speed_i *= MS1_2_KPH;
+					break;
+			}
+			int alt_i = alt * 100;
+			int track_i = track * 100;
+
+			sprintf(gps_exif, "--exif GPS.GPSLatitude=%d/1,%d/1,%d/100 --exif GPS.GPSLongitude=%d/1,%d/1,%d/100 --exif GPS.GPSAltitude=%d/100 --exif GPS.GPSTrack=%d/100 --exif GPS.GPSSpeed=%d/100 --exif GPS.GPSTrackRef=T --exif GPS.GPSLatitudeRef=%c --exif GPS.GPSLongitudeRef=%c --exif GPS.GPSSpeedRef=%c", lat_d, lat_m, lat_s, long_d, long_m, long_s, alt_i, track_i, speed_i, lat_ref, lon_ref, gps_speed_units);
 
 			//Set current position as last position
 			last_lat = current_lat;
