@@ -58,6 +58,8 @@ Optional Stuff
 	- It can be disabled by commenting out marked lines of ```start_timelapse.sh```
 - Custom web pages
 	-	mjpg-streamer has a webserver, it's contents can be modified by changing the contents of the www folder inside mjpg-streamer
+- Custom frame handling
+	-	It is possible to used stream frame images with custom applications, in this case have your application start instead of mjpg-streamer in ```start_timelapse.sh``` and watch the ```stream_tl```	directory for the frame file to be modified
 
 Notes
 -----
