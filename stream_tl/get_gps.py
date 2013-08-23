@@ -1,6 +1,6 @@
 import sys, gps
 
-#Prints GPS lat/lon to console, optionally saves more location data to file
+#Prints GPS data to console, optionally saves data to file
 #Note: gpsd must be running and getting data from a sensor
 #USAGE: python get_gps.py [output_file]
 
