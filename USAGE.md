@@ -36,6 +36,10 @@ The Pi has no in built RTC, hence system time is dependant on a reply from an NT
 
 GPS time will also be more accurate, direct connection to a GPS device is Stratum 0 whereas NTP is at best Stratum 1.
 
+Because a GPIO pin is used to read the fix indicator, the script must run with root permissions, meaning any images will belong to root (if you download images over SFTP then this isn't a problem).
+
+GPS time is saved in ```EXIF.GPSInfo.GPSDateStamp``` and ```EXIF.GPSInfo.GPSTimeStamp```, use this if accurate time is needed, if Pi has an internet connection (or is at least on a network with an NTP server) then the system clock should be good enough.
+
 Troubleshooting
 ---------------
 

@@ -138,7 +138,7 @@ int set_gps_exif(char *filename, double lat, double lon, double alt, double trac
     int year = 1900 + gps_time->tm_year;
     int month = gps_time->tm_mon + 1;
     Exiv2::DateValue *exif_datestamp = new Exiv2::DateValue(year, month, gps_time->tm_mday);
-    exif_data.add(Exiv2::ExifKey("Exif.GPSInfo.GPSDateStamp"), exif_datestamp);
+    exif_data.add(Exiv2::ExifKey("Exif.GPSInfo.GPSDateStamp"), exif_datestamp); //If this produces an error in the console/logfiles it can be ignored, EXIF viewers parse the date format correcty
 
     //Write EXIF metadata to image
     image->writeMetadata();

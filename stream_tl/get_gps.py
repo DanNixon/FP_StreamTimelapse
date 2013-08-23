@@ -1,29 +1,19 @@
-import sys, gps
+import sys, thread, time, gps
 
-#Prints GPS data to console, optionally saves data to file
+#Prints GPS data to console
 #Note: gpsd must be running and getting data from a sensor
-#USAGE: python get_gps.py [output_file]
 
-# Listen on port 2947 (gpsd) of localhost
 session = gps.gps("localhost", "2947")
 session.stream(gps.WATCH_ENABLE | gps.WATCH_NEWSTYLE)
-
-if len(sys.argv) > 1:
-	out_file = open(sys.argv[1], 'w')
 
 while True:
 	try:
 		report = session.next()
 		if report['class'] == 'TPV':
-			if len(sys.argv) > 1:
-				for key in {"lat", "lon", "alt", "track", "speed", "climb", "time"}:
-					out_file.write(key)
-					out_file.write(":")
-					out_file.write(str(report[key]))
-					out_file.write("\n")
-				out_file.close()
-			print report['lat'],report['lon'],report['alt'],report['track'],report['speed']
+			print report['lat'],report['lon'],report['alt'],report['track'],report['speed'],report['time']
+			exit()
 			break
 	except StopIteration:
 		session = None
-		print "0.0 0.0 0.0 0.0"
+		print "0.0 0.0 0.0 0.0 0-0-0T0:0:0.0Z"
+		break
