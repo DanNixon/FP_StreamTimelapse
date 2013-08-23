@@ -1,4 +1,4 @@
-import sys, thread, time, gps
+import sys, gps
 
 #Prints GPS data to console
 #Note: gpsd must be running and getting data from a sensor
