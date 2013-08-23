@@ -53,7 +53,7 @@ int wait_for_gps_lock()
 }
 
 //Adds GPS EXIF data to saved image
-int set_gps_exif(char *filename, double lat, double lon, double alt, double track, double speed)
+int set_gps_exif(char *filename, double lat, double lon, double alt, double track, double speed, char *timestamp)
 {
     //Open image and get current metadata
     Exiv2::Image::AutoPtr image = Exiv2::ImageFactory::open(filename);
@@ -119,6 +119,26 @@ int set_gps_exif(char *filename, double lat, double lon, double alt, double trac
     int track_i = track * 100;
     exif_data["Exif.GPSInfo.GPSTrack"] = Exiv2::Rational(track_i, 100);
     exif_data["Exif.GPSInfo.GPSTrackRef"] = "T";
+
+    //Parse the GPS timestamp
+    tm *gps_time;
+    strptime(timestamp, "%Y-%m-%dT%H:%M:%SZ", gps_time);
+
+    //Set EXIF timestamp
+    //Exiv2::TimeValue *exif_timestamp = new Exiv2::TimeValue(gps_time->tm_hour, gps_time->tm_min, gps_time->tm_sec);
+
+    Exiv2::URationalValue::AutoPtr exif_timestamp(new Exiv2::URationalValue);
+    exif_timestamp->value_.push_back(std::make_pair(gps_time->tm_hour, 1));
+    exif_timestamp->value_.push_back(std::make_pair(gps_time->tm_min, 1));
+    exif_timestamp->value_.push_back(std::make_pair(gps_time->tm_sec, 1));
+
+    exif_data.add(Exiv2::ExifKey("Exif.GPSInfo.GPSTimeStamp"), exif_timestamp.get());
+
+    //Set EXIF datestamp
+    int year = 1900 + gps_time->tm_year;
+    int month = gps_time->tm_mon + 1;
+    Exiv2::DateValue *exif_datestamp = new Exiv2::DateValue(year, month, gps_time->tm_mday);
+    exif_data.add(Exiv2::ExifKey("Exif.GPSInfo.GPSDateStamp"), exif_datestamp);
 
     //Write EXIF metadata to image
     image->writeMetadata();

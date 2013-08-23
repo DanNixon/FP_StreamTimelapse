@@ -147,13 +147,14 @@ int main(int argc, char **argv)
         double track;
         double speed;
         double delta_dist;
+        char timestamp[100];
 
         if(use_gps)
         {
             //Get current GPS position
             cout<<"Getting GPS location"<<endl;
             gps_get_reader = popen("python get_gps.py", "r");
-            fscanf(gps_get_reader, "%lf %lf %lf %lf %lf", &current_lat, &current_long, &alt, &track, &speed);
+            fscanf(gps_get_reader, "%lf %lf %lf %lf %lf %s", &current_lat, &current_long, &alt, &track, &speed, timestamp);
             pclose(gps_get_reader);
             cout<<"Current position: "<<current_lat<<", "<<current_long<<endl;
 
@@ -193,7 +194,7 @@ int main(int argc, char **argv)
             {
                 char file_path[100];
                 sprintf(file_path, "./%s/original/%s.jpg", save_path, frame_fn);
-                set_gps_exif(file_path, current_lat, current_long, alt, track, speed);
+                set_gps_exif(file_path, current_lat, current_long, alt, track, speed, timestamp);
             }
 
             //Start thread to convert image (~900ms for conversion)

@@ -29,6 +29,13 @@ A stream of the raw camera captures is available at http://[pi_ip]:8080/?action=
 
 The BPStreamViewer application can be used to view this stream, both unwrapped and on a sphere.
 
+Notes
+-----
+
+The Pi has no in built RTC, hence system time is dependant on a reply from an NTP server, this may not always be possible, hence if getting a correct time for each image is important use the GPS EXIF data rather than ```EXIF.Image.DateTime```.
+
+GPS time will also be more accurate, direct connection to a GPS device is Stratum 0 whereas NTP is at best Stratum 1.
+
 Troubleshooting
 ---------------
 
