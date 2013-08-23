@@ -23,8 +23,8 @@ const char *rs_strm_args = "-tl 200 -n -th 0:0:0 -w 1000 -h 1000 -awb off -ex of
 const int min_tl_delay = 500; //>500
 const int tl_cap_run_in = 80; //>50, delay between starting camera in stills mode and taking image
 const char *frame_location = "s_frame.jpg";
-float min_cap_dist = 0.0f; //Minimum distance that must be traveled before another timelapse image will be captured
 
+float min_cap_dist;
 int use_gps = 0;
 char *save_path;
 int run;

@@ -31,18 +31,23 @@ Hardware Installation
 Configure timelapse
 -------------------
 
-8.  Configure delay between timelapse captures, this is set in [start_timelapse.sh](https://github.com/DanNixon/FP_StreamTimelapse/blob/master/stream_tl/start_timelapse.sh#L22), by default it is set to 5000ms.
-9.	Configure timelapse image filenames, this can be set in [start_timelapse.sh](https://github.com/DanNixon/FP_StreamTimelapse/blob/master/stream_tl/start_timelapse.sh#L22), where ```%d``` is the frame number (this is very important, if the filename does not have a %d the same file will be overwritten every capture)
+8.  Configure delay between timelapse captures, this is set in [start_timelapse.sh](https://github.com/DanNixon/FP_StreamTimelapse/blob/master/stream_tl/start_timelapse.sh), by default it is set to 5000ms.
+9.	Configure timelapse image filenames, this can be set in [start_timelapse.sh](https://github.com/DanNixon/FP_StreamTimelapse/blob/master/stream_tl/start_timelapse.sh), where ```%d``` is the frame number (this is very important, if the filename does not have a %d the same file will be overwritten every capture)
+10.	Configure GPS options:
+	-	GPS can be enabled/disabled by editing the ```USE_GPS``` line of start_timelapse.sh
+	-	To record GPS data only set min capture distance in start_timelapse.sh to 0
+	-	Alternatively, set this to a distance (either miles or KM, see below) which has to have been covered in the timelapse delay if a new image is to be taken
+	-	The unit of the above option and unit in which speed is recorded in GPS EXIF can be configured in gps.cpp, by changing the ```gps_speed_units``` option (note that the distance covered option is in KM in Knots is selected as the speed unit)
 
 Configure streaming_timelapse
 -----------------------------
 
-10.	Configure timelapse camera options ( [main.cpp L17](https://github.com/DanNixon/FP_StreamTimelapse/blob/master/stream_tl/streaming_timelapse/main.cpp#L17) )
-11.	Configure MJPG stream camera options ( [main.cpp L18](https://github.com/DanNixon/FP_StreamTimelapse/blob/master/stream_tl/streaming_timelapse/main.cpp#L18) )
-12.	Configure misc timelapse options ( [main.cpp L19-20](https://github.com/DanNixon/FP_StreamTimelapse/blob/master/stream_tl/streaming_timelapse/main.cpp#L19) )
+11.	Configure timelapse camera options ( [main.cpp](https://github.com/DanNixon/FP_StreamTimelapse/blob/master/stream_tl/streaming_timelapse/main.cpp) )
+12.	Configure MJPG stream camera options ( [main.cpp](https://github.com/DanNixon/FP_StreamTimelapse/blob/master/stream_tl/streaming_timelapse/main.cpp) )
+13.	Configure misc timelapse options ( [main.cpp](https://github.com/DanNixon/FP_StreamTimelapse/blob/master/stream_tl/streaming_timelapse/main.cpp) )
 	-	min_tl_delay = having a timelapse period too low reduced stream consistency, a minimum helps prevent that
 	-	tl_cap_run_in = time camera module is running for before capturing a timelapse image, improves consistency of exposure
-13.	Configure equi. image generation ( [main.cpp L42](https://github.com/DanNixon/FP_StreamTimelapse/blob/master/stream_tl/streaming_timelapse/main.cpp#L42) )
+14.	Configure equi. image generation ( [main.cpp](https://github.com/DanNixon/FP_StreamTimelapse/blob/master/stream_tl/streaming_timelapse/main.cpp) )
 	-	Parameters same as general equi. generation
 
 Optional Stuff
@@ -50,7 +55,7 @@ Optional Stuff
 
 -	Disable Auto Recovery
 	-	Auto recovery can get the Pi stuck in a reboot cycle if it fails (although this is very unlikely)
-	- It can be disabled by commenting out lines 36-51 of ```start_timelapse.sh```
+	- It can be disabled by commenting out marked lines of ```start_timelapse.sh```
 - Custom web pages
 	-	mjpg-streamer has a webserver, it's contents can be modified by changing the contents of the www folder inside mjpg-streamer
 
