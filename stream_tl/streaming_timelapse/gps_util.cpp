@@ -6,7 +6,7 @@
 
 #include <exiv2/exiv2.hpp>
 
-#include "gps.h"
+#include "gps_util.h"
 #include "gpio.h"
 
 #ifndef DEG_2_RAD

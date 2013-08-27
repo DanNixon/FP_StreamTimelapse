@@ -13,7 +13,7 @@ if [ $USE_GPS == "1" ]; then
 	sudo killall gpsd
 
 	echo "Starting a new GPSD"
-	sudo gpsd /dev/ttyAMA0 -F /var/run/gpsd.sock
+	sudo gpsd -n -G /dev/ttyAMA0 -F /var/run/gpsd.sock
 fi
 
 echo "Removing old frame image"
@@ -27,19 +27,23 @@ sleep $1
 
 screen -L -d -m -S date_rec date -u
 
+echo "Starting GPS"
+screen -L -d -m -S gps python ./get_gps.py ./gps.temp
+
 echo "Starting MJPEG server"
 screen -L -d -m -S mjpg_stream ./mjpg-streamer/start.sh
+
 echo "Starting capture"
 #ARGS: [output folder] [image name (%d is frame number)] [timelapse delay ms] [capture time ms (0 for capture untill SIGTERM)] [minimum capture distance] [use GPS]
-screen -L -d -m -S stl_capture sudo ./streaming_timelapse/streaming_timelapse tl_images i%d 5000 0 0.0 $USE_GPS
+screen -L -d -m -S stl_capture sudo ./streaming_timelapse/streaming_timelapse tl_images i%d 30000 0 0.0 $USE_GPS
 
 sleep 2
 
-echo "Ensure 2 screens are found:"
+echo "Ensure 3 screens are found:"
 screen -ls
 
 screen_l_count=`screen -ls | wc -l`
-if [ $screen_l_count == "5" ]; then
+if [ $screen_l_count == "6" ]; then
 	echo "Capture seems to have started properly"
 else
 	echo "Capture has not correctly started"

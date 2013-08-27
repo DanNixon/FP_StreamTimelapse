@@ -11,7 +11,7 @@
 #include <exiv2/exiv2.hpp>
 
 #include "equi_gen_buf.h"
-#include "gps.h"
+#include "gps_util.h"
 
 #define DEG_2_RAD 0.0174532925
 
@@ -89,6 +89,8 @@ int main(int argc, char **argv)
     sscanf(argv[5], "%f", &min_cap_dist);
     sscanf(argv[6], "%d", &use_gps);
 
+    delay /= 2; //There is some very weird clock skew that seems to cause the Pi clock to run 0.5 times that of the GPS clock.
+
     cout<<"Timelapse capture delay: "<<delay<<"ms"<<endl;
     cout<<"Requested frames (0=infinate): "<<f_count<<endl;
     cout<<"Timelaspe raspistill args: "<<rs_tl_args<<endl;
@@ -153,9 +155,9 @@ int main(int argc, char **argv)
         {
             //Get current GPS position
             cout<<"Getting GPS location"<<endl;
-            gps_get_reader = popen("python get_gps.py", "r");
+            gps_get_reader = fopen("gps.temp" , "r");
             fscanf(gps_get_reader, "%lf %lf %lf %lf %lf %s", &current_lat, &current_long, &alt, &track, &speed, timestamp);
-            pclose(gps_get_reader);
+            fclose(gps_get_reader);
             cout<<"Current position: "<<current_lat<<", "<<current_long<<endl;
 
             //Calculate distance traveled since last capture
@@ -186,7 +188,7 @@ int main(int argc, char **argv)
             char tl_capture_cmd[500];
             sprintf(tl_capture_cmd, "raspistill -o %s/original/%s.jpg -t %d %s", save_path, frame_fn, tl_cap_run_in, rs_tl_args);
 
-            cout<<"Starting timelapse capture"<<endl;
+            cout<<"Starting timelapse capture (GPS_Time: "<<timestamp<<")"<<endl;
             system(tl_capture_cmd);
             cout<<"Timelapse capture end"<<endl;
 
