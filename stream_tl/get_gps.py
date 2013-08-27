@@ -3,7 +3,7 @@ import sys, gps
 #Prints GPS data to console
 #Note: gpsd must be running and getting data from a sensor
 
-session = gps.gps("192.168.0.41", "2947")
+session = gps.gps("localhost", "2947")
 session.stream(gps.WATCH_ENABLE | gps.WATCH_NEWSTYLE)
 
 while True:
