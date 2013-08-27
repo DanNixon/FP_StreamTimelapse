@@ -153,9 +153,9 @@ int main(int argc, char **argv)
         {
             //Get current GPS position
             cout<<"Getting GPS location"<<endl;
-            gps_get_reader = popen("python get_gps.py", "r");
+            gps_get_reader = fopen("gps.temp" , "r");
             fscanf(gps_get_reader, "%lf %lf %lf %lf %lf %s", &current_lat, &current_long, &alt, &track, &speed, timestamp);
-            pclose(gps_get_reader);
+            fclose(gps_get_reader);
             cout<<"Current position: "<<current_lat<<", "<<current_long<<endl;
 
             //Calculate distance traveled since last capture
