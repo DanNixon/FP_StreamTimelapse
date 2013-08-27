@@ -89,6 +89,8 @@ int main(int argc, char **argv)
     sscanf(argv[5], "%f", &min_cap_dist);
     sscanf(argv[6], "%d", &use_gps);
 
+    delay /= 2; //There is some very weird clock skew that seems to cause the Pi clock to run 0.5 times that of the GPS clock.
+
     cout<<"Timelapse capture delay: "<<delay<<"ms"<<endl;
     cout<<"Requested frames (0=infinate): "<<f_count<<endl;
     cout<<"Timelaspe raspistill args: "<<rs_tl_args<<endl;
@@ -186,7 +188,7 @@ int main(int argc, char **argv)
             char tl_capture_cmd[500];
             sprintf(tl_capture_cmd, "raspistill -o %s/original/%s.jpg -t %d %s", save_path, frame_fn, tl_cap_run_in, rs_tl_args);
 
-            cout<<"Starting timelapse capture"<<endl;
+            cout<<"Starting timelapse capture (GPS_Time: "<<timestamp<<")"<<endl;
             system(tl_capture_cmd);
             cout<<"Timelapse capture end"<<endl;
 
