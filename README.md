@@ -3,15 +3,10 @@ FP_StreamTimelapse
 
 360 degree timelapse recorder for BubbleScope with MJPEG streaming to run on the RasPi.
 
-Requirements
-------------
+Allows capturing of timelapse frames at a given interval and streaming over a MJPG stream during delay period.
 
-1.  OpenCV (tested with 2.4)
-2.  RaspiStill
-3.  cmake
-4.	Camera module adapted for variable focus (glue on lens screw removed)
-5.	"Large" SD card (timelapse capturing every minute should run for 7 days happily on a 32GB card)
-6. [mjpg-streamer](http://sourceforge.net/projects/mjpg-streamer/)
-7. gpsd
-8. Suitable GPS module compatible with gpsd and with fix indicator output (e.g. [Adafruit Ultimate GPS](http://www.adafruit.com/products/746))
-9. [Exiv2](http://www.exiv2.org/index.html) (C++ library for EXIF data read/write)
+Application can run in 3 "modes" depending on the configuration of run variables:
+
+1.	Basic timelapse: application will record a frame after the timelpase period has elapsed and stream during the delay period.
+2.	Location recording timelapse: same as basic but will record the location of every timelapse image and save to EXIF.
+3.	Location aware timelapse: same as location recording but will only capture a new timelapse image if a certain distance has been covered since the last image was captured
