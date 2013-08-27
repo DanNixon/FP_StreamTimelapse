@@ -11,7 +11,7 @@
 #include <exiv2/exiv2.hpp>
 
 #include "equi_gen_buf.h"
-#include "gps.h"
+#include "gps_util.h"
 
 #define DEG_2_RAD 0.0174532925
 
