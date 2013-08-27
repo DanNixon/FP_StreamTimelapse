@@ -188,7 +188,9 @@ int main(int argc, char **argv)
             char tl_capture_cmd[500];
             sprintf(tl_capture_cmd, "raspistill -o %s/original/%s.jpg -t %d %s", save_path, frame_fn, tl_cap_run_in, rs_tl_args);
 
-            cout<<"Starting timelapse capture (GPS_Time: "<<timestamp<<")"<<endl;
+            cout<<"Starting timelapse capture";
+            if(use_gps)  cout<<"(GPS_Time: "<<timestamp<<")"<<endl;
+            else cout<<endl;
             system(tl_capture_cmd);
             cout<<"Timelapse capture end"<<endl;
 
