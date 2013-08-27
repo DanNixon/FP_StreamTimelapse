@@ -5,15 +5,14 @@ Requirements
 ------------
 
 1.	Install/obtain/configure the following:
-	-  OpenCV (tested with 2.4)
-	-  RaspiStill
-	-  cmake
+	-	[cmake](http://www.cmake.org)
+	-	[OpenCV](http://opencv.willowgarage.com) (used for equi unwrap, tested with 2.4)
+	-	[gpsd](http://www.catb.org/gpsd) (for communication between software and GPS hardware)
+	-	[Exiv2](http://www.exiv2.org/index.html) (C++ library for EXIF data read/write)
+	-	[mjpg-streamer](http://sourceforge.net/projects/mjpg-streamer/) (used to create MJPG stream, included in this repo pre-configured)
 	-	Camera module adapted for variable focus (glue on lens screw removed)
 	-	"Large" SD card (timelapse capturing every minute should run for 7 days happily on a 32GB card)
-	- [mjpg-streamer](http://sourceforge.net/projects/mjpg-streamer/)
-	- gpsd
-	- Suitable GPS module compatible with gpsd and with fix indicator output (e.g. [Adafruit Ultimate GPS](http://www.adafruit.com/products/746))
-	-	[Exiv2](http://www.exiv2.org/index.html) (C++ library for EXIF data read/write)
+	-	Suitable GPS module compatible with gpsd and with fix indicator output (e.g. [Adafruit Ultimate GPS](http://www.adafruit.com/products/746))
 
 Software Installation
 ---------------------
@@ -28,7 +27,7 @@ Hardware Installation
 5.	Install camera module as directed [here](http://www.raspberrypi.org/camera), check it works using ```raspistill```.
 6.	Disable hardware UART boot messages and tty:
 	-	run ```sudo nano /boot/cmdline.txt``` and change
-	- "dwc_otg.lpm_enable=0 console=ttyAMA0,115200 kgdboc=ttyAMA0,115200 console=tty1 root=/dev/mmcblk0p2 rootfstype=ext4 elevator=deadline rootwait" to
+	-	"dwc_otg.lpm_enable=0 console=ttyAMA0,115200 kgdboc=ttyAMA0,115200 console=tty1 root=/dev/mmcblk0p2 rootfstype=ext4 elevator=deadline rootwait" to
 
 	- **"dwc_otg.lpm_enable=0 console=tty1 root=/dev/mmcblk0p2 rootfstype=ext4 elevator=deadline rootwait"**
 7.	Disable hardware UART tty/getty:
