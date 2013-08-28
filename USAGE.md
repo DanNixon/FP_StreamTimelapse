@@ -38,7 +38,7 @@ GPS time will also be more accurate, direct connection to a GPS device is Stratu
 
 Because a GPIO pin is used to read the fix indicator, the script must run with root permissions, meaning any images will belong to root (if you download images over SFTP then this isn't a problem).
 
-GPS time is saved in ```EXIF.GPSInfo.GPSDateStamp``` and ```EXIF.GPSInfo.GPSTimeStamp```, use this if accurate time is needed, if Pi has an internet connection (or is at least on a network with an NTP server) then the system clock should be good enough.
+GPS time is saved in ```EXIF.GPSInfo.GPSDateStamp``` and ```EXIF.GPSInfo.GPSTimeStamp```, it is highly recommended to use this date/time stamp over the standard ```EXIF.Image``` data as the system clock is unlikely to be correct if not on a network.
 
 Troubleshooting
 ---------------
