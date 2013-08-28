@@ -7,15 +7,6 @@ echo `date -u`
 #Set to 1 to use GPS, 0 for no GPS
 USE_GPS="1"
 
-if [ $USE_GPS == "1" ]; then
-
-	echo "Killing any running GPS daemons"
-	sudo killall gpsd
-
-	echo "Starting a new GPSD"
-	sudo gpsd -n -G /dev/ttyAMA0 -F /var/run/gpsd.sock
-fi
-
 echo "Removing old frame image"
 rm s_frame.jpg
 
@@ -49,22 +40,21 @@ else
 	echo "Capture has not correctly started"
 
 	#UNCOMMENT FOR AUTO RECOVERY
-	echo "Performing auto recovery"
-	dir_found=0
-	i=0
-	directory=""
-
-	while [ $dir_found == 0 ]
-	do
-		if [ -d "recovery"$i ]; then
-			(( i++ ))
-		else
-			dir_found=1
-			mkdir recovery$i
-		fi
-	done
-	./recovery.sh "recovery"$i
-	sudo reboot
+	#echo "Performing auto recovery"
+	#dir_found=0
+	#i=0
+	#directory=""
+	#while [ $dir_found == 0 ]
+	#do
+	#	if [ -d "recovery"$i ]; then
+	#		(( i++ ))
+	#	else
+	#		dir_found=1
+	#		mkdir recovery$i
+	#	fi
+	#done
+	#./recovery.sh "recovery"$i
+	#sudo reboot
 
 fi
 
