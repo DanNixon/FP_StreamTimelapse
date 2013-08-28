@@ -28,9 +28,8 @@ Hardware Installation
 6.	Install camera module as directed [here](http://www.raspberrypi.org/camera), check it works using ```raspistill```.
 7.	Disable hardware UART boot messages and tty:
 	-	run ```sudo nano /boot/cmdline.txt``` and change
-	-	"dwc_otg.lpm_enable=0 console=ttyAMA0,115200 kgdboc=ttyAMA0,115200 console=tty1 root=/dev/mmcblk0p2 rootfstype=ext4 elevator=deadline rootwait" to
-
-	- "dwc_otg.lpm_enable=0 console=tty1 root=/dev/mmcblk0p2 rootfstype=ext4 elevator=deadline rootwait"
+	-	**"dwc_otg.lpm_enable=0 console=ttyAMA0,115200 kgdboc=ttyAMA0,115200 console=tty1 root=/dev/mmcblk0p2 rootfstype=ext4 elevator=deadline rootwait"** to
+	-	**"dwc_otg.lpm_enable=0 console=tty1 root=/dev/mmcblk0p2 rootfstype=ext4 elevator=deadline rootwait"**
 8.	Disable hardware UART tty/getty:
 	-	run ```sudo nano /etc/inittab``` and comment out the following line:
 	-	**"T0:23:respawn:/sbin/getty -L ttyAMA0 115200 vt100"**
