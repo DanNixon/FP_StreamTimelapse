@@ -19,7 +19,7 @@ using namespace std;
 using namespace cv;
 
 const char *rs_tl_args = "-n -w 2000 -h 2000 -awb sun -ex backlight -ev -2 -mm backlit --exif EXIF.MakerNote=BubbleScopeTimelapseFrame";
-const char *rs_strm_args = "-tl 200 -n -th 0:0:0 -w 1000 -h 1000 -awb sun -ex backlight -ev -4 -mm backlit";
+const char *rs_strm_args = "-tl 500 -n -th 0:0:0 -w 600 -h 600 -awb sun -ex backlight -ev -4 -mm backlit";
 const int min_tl_delay = 500; //>500
 const int tl_cap_run_in = 80; //>50, delay between starting camera in stills mode and taking image
 const char *frame_location = "s_frame.jpg";
