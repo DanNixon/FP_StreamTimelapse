@@ -3,4 +3,5 @@ BPStreamViewer/obj/
 BPStreamViewer/BPStreamViewer.cbp
 BPStreamViewer/BPStreamViewer.depend
 BPStreamViewer/BPStreamViewer.layout
-
+cloud_streaming/server/equi_gen/bin/
+cloud_streaming/server/equi_gen/obj/
