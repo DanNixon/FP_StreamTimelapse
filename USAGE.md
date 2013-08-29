@@ -47,4 +47,4 @@ Use either ```ps aux | grep stream``` or ```screen -ls``` to check status of cap
 
 From the root folder (stream_tl) use ```tail -f screenlog.0``` to monitor capture in real time.
 
-The command ```df -k``` can be used to monitor the amount  of free space remaining on the SD card.
+The command ```df``` can be used to monitor the amount  of free space remaining on the SD card.
