@@ -1,0 +1,344 @@
+# depslib dependency file v1.0
+1373542761 source:/home/dan/Desktop/OpenGL_ES_Test/Hello_Triangle.c
+	<stdlib.h>
+	"esUtil.h"
+
+1373542761 /home/dan/Desktop/OpenGL_ES_Test/lib/esUtil.h
+	<GLES2/gl2.h>
+	<EGL/egl.h>
+
+1373542761 source:/home/dan/Desktop/OpenGL_ES_Test/lib/esShader.c
+	"esUtil.h"
+	<stdlib.h>
+
+1373542761 source:/home/dan/Desktop/OpenGL_ES_Test/lib/esShapes.c
+	"esUtil.h"
+	<stdlib.h>
+	<math.h>
+	<string.h>
+
+1373542761 source:/home/dan/Desktop/OpenGL_ES_Test/lib/esTransform.c
+	"esUtil.h"
+	<math.h>
+	<string.h>
+
+1373542761 source:/home/dan/Desktop/OpenGL_ES_Test/lib/esUtil.c
+	<stdio.h>
+	<stdlib.h>
+	<string.h>
+	<stdarg.h>
+	<sys/time.h>
+	<GLES2/gl2.h>
+	<EGL/egl.h>
+	"esUtil.h"
+	"bcm_host.h"
+	<X11/Xlib.h>
+	<X11/Xatom.h>
+	<X11/Xutil.h>
+
+1373549560 source:/home/dan/Desktop/OpenGL_ES_Test/MultiTexture.c
+	<stdlib.h>
+	"lib/esUtil.h"
+
+1373549917 source:/home/dan/Dropbox/FluidPixel/OpenGL_ES_Test/Hello_Triangle.c
+	<stdlib.h>
+	"lib/esUtil.h"
+
+1374066109 source:/home/dan/Dropbox/FluidPixel/OpenGL_ES_Test/lib/esShader.c
+	"esUtil.h"
+	<stdlib.h>
+
+1373542761 /home/dan/Dropbox/FluidPixel/OpenGL_ES_Test/lib/esUtil.h
+	<GLES2/gl2.h>
+	<EGL/egl.h>
+
+1373542761 source:/home/dan/Dropbox/FluidPixel/OpenGL_ES_Test/lib/esShapes.c
+	"esUtil.h"
+	<stdlib.h>
+	<math.h>
+	<string.h>
+
+1373542761 source:/home/dan/Dropbox/FluidPixel/OpenGL_ES_Test/lib/esTransform.c
+	"esUtil.h"
+	<math.h>
+	<string.h>
+
+1373542761 source:/home/dan/Dropbox/FluidPixel/OpenGL_ES_Test/lib/esUtil.c
+	<stdio.h>
+	<stdlib.h>
+	<string.h>
+	<stdarg.h>
+	<sys/time.h>
+	<GLES2/gl2.h>
+	<EGL/egl.h>
+	"esUtil.h"
+	"bcm_host.h"
+	<X11/Xlib.h>
+	<X11/Xatom.h>
+	<X11/Xutil.h>
+
+1373549586 source:/home/dan/Dropbox/FluidPixel/OpenGL_ES_Test/MultiTexture.c
+	<stdlib.h>
+	"lib/esUtil.h"
+
+1373549757 source:/home/dan/Dropbox/FluidPixel/OpenGL_ES_Test/Simple_Texture2D.c
+	<stdlib.h>
+	"lib/esUtil.h"
+
+1373878897 source:/home/dan/Dropbox/FluidPixel/OpenGL_ES_Test/fp_sphere.cpp
+	"fp_sphere.h"
+	<iostream>
+
+1373878922 /home/dan/Dropbox/FluidPixel/OpenGL_ES_Test/fp_sphere.h
+	"lib/esUtil.h"
+	<GLES2/gl2.h>
+	<EGL/egl.h>
+	<vector>
+	<cmath>
+
+1373988891 source:/home/dan/Dropbox/FluidPixel/OpenGL_ES_Test/main.cpp
+	<iostream>
+	<cassert>
+	<cstdlib>
+	<cmath>
+	<cstdio>
+	"lib/esUtil.h"
+	"image.h"
+
+1373554302 source:/home/dan/Dropbox/FluidPixel/OpenGL_ES_Test/Hello_Triangle.cpp
+	<stdlib.h>
+	"lib/esUtil.h"
+	"fp_sphere.h"
+
+1373988591 source:/home/dan/Dropbox/FluidPixel/OpenGL_ES_Test/image.cpp
+	<iostream>
+	<cassert>
+	<opencv2/core/core.hpp>
+	<opencv2/highgui/highgui.hpp>
+	"image.h"
+
+1373457039 /home/dan/Dropbox/FluidPixel/OpenGL_ES_Test/image.h
+
+1374066109 source:/home/dan/Dropbox/FluidPixel/RTSP_StreamSphere/lib/esShader.c
+	"esUtil.h"
+	<stdlib.h>
+
+1373542761 /home/dan/Dropbox/FluidPixel/RTSP_StreamSphere/lib/esUtil.h
+	<GLES2/gl2.h>
+	<EGL/egl.h>
+
+1373542761 source:/home/dan/Dropbox/FluidPixel/RTSP_StreamSphere/lib/esShapes.c
+	"esUtil.h"
+	<stdlib.h>
+	<math.h>
+	<string.h>
+
+1373542761 source:/home/dan/Dropbox/FluidPixel/RTSP_StreamSphere/lib/esTransform.c
+	"esUtil.h"
+	<math.h>
+	<string.h>
+
+1373542761 source:/home/dan/Dropbox/FluidPixel/RTSP_StreamSphere/lib/esUtil.c
+	<stdio.h>
+	<stdlib.h>
+	<string.h>
+	<stdarg.h>
+	<sys/time.h>
+	<GLES2/gl2.h>
+	<EGL/egl.h>
+	"esUtil.h"
+	"bcm_host.h"
+	<X11/Xlib.h>
+	<X11/Xatom.h>
+	<X11/Xutil.h>
+
+1375451078 source:/home/dan/Dropbox/FluidPixel/RTSP_StreamSphere/image.cpp
+	<iostream>
+	<cassert>
+	<opencv2/core/core.hpp>
+	<opencv2/highgui/highgui.hpp>
+	"image.h"
+
+1375451115 /home/dan/Dropbox/FluidPixel/RTSP_StreamSphere/image.h
+
+1375881003 source:/home/dan/Dropbox/FluidPixel/RTSP_StreamSphere/main.cpp
+	<iostream>
+	<cassert>
+	<cstdlib>
+	<cmath>
+	<cstdio>
+	<ctime>
+	<pthread.h>
+	"opencv2/opencv.hpp"
+	"lib/esUtil.h"
+	"image.h"
+	"equi_gen_buf.h"
+
+1340924117 /usr/include/opencv/cv.h
+	"opencv2/core/core_c.h"
+	"opencv2/core/core.hpp"
+	"opencv2/imgproc/imgproc_c.h"
+	"opencv2/imgproc/imgproc.hpp"
+	"opencv2/video/tracking.hpp"
+	"opencv2/features2d/features2d.hpp"
+	"opencv2/flann/flann.hpp"
+	"opencv2/calib3d/calib3d.hpp"
+	"opencv2/objdetect/objdetect.hpp"
+	"opencv2/legacy/compat.hpp"
+	"opencv2/core/internal.hpp"
+
+1340924117 /usr/include/opencv/highgui.h
+	"opencv2/core/core_c.h"
+	"opencv2/core/core.hpp"
+	"opencv2/highgui/highgui_c.h"
+	"opencv2/highgui/highgui.hpp"
+
+1375436591 /home/dan/Dropbox/FluidPixel/RTSP_StreamSphere/equi_gen_buf.h
+
+1375717270 source:/home/dan/Dropbox/FluidPixel/RTSP_StreamSphere/equi_gen_buf.cpp
+	<stdio.h>
+	<stdlib.h>
+	<string.h>
+	<memory.h>
+	<math.h>
+	<assert.h>
+	<cv.h>
+	<highgui.h>
+	"equi_gen_buf.h"
+
+1375717270 source:/home/dan/Dropbox/FluidPixel/BPStreamViewer/equi_gen_buf.cpp
+	<stdio.h>
+	<stdlib.h>
+	<string.h>
+	<memory.h>
+	<math.h>
+	<assert.h>
+	<cv.h>
+	<highgui.h>
+	"equi_gen_buf.h"
+
+1375436591 /home/dan/Dropbox/FluidPixel/BPStreamViewer/equi_gen_buf.h
+
+1375451078 source:/home/dan/Dropbox/FluidPixel/BPStreamViewer/image.cpp
+	<iostream>
+	<cassert>
+	<opencv2/core/core.hpp>
+	<opencv2/highgui/highgui.hpp>
+	"image.h"
+
+1375451115 /home/dan/Dropbox/FluidPixel/BPStreamViewer/image.h
+
+1374066109 source:/home/dan/Dropbox/FluidPixel/BPStreamViewer/lib/esShader.c
+	"esUtil.h"
+	<stdlib.h>
+
+1373542761 /home/dan/Dropbox/FluidPixel/BPStreamViewer/lib/esUtil.h
+	<GLES2/gl2.h>
+	<EGL/egl.h>
+
+1373542761 source:/home/dan/Dropbox/FluidPixel/BPStreamViewer/lib/esShapes.c
+	"esUtil.h"
+	<stdlib.h>
+	<math.h>
+	<string.h>
+
+1373542761 source:/home/dan/Dropbox/FluidPixel/BPStreamViewer/lib/esTransform.c
+	"esUtil.h"
+	<math.h>
+	<string.h>
+
+1373542761 source:/home/dan/Dropbox/FluidPixel/BPStreamViewer/lib/esUtil.c
+	<stdio.h>
+	<stdlib.h>
+	<string.h>
+	<stdarg.h>
+	<sys/time.h>
+	<GLES2/gl2.h>
+	<EGL/egl.h>
+	"esUtil.h"
+	"bcm_host.h"
+	<X11/Xlib.h>
+	<X11/Xatom.h>
+	<X11/Xutil.h>
+
+1375972939 source:/home/dan/Dropbox/FluidPixel/BPStreamViewer/main.cpp
+	<iostream>
+	<cassert>
+	<cstdlib>
+	<cmath>
+	<cstdio>
+	<ctime>
+	<pthread.h>
+	"opencv2/opencv.hpp"
+	"lib/esUtil.h"
+	"image.h"
+	"equi_gen_buf.h"
+
+1375717270 source:/home/dan/Dropbox/FluidPixel/FP_StreamTimelapse/BPStreamViewer/equi_gen_buf.cpp
+	<stdio.h>
+	<stdlib.h>
+	<string.h>
+	<memory.h>
+	<math.h>
+	<assert.h>
+	<cv.h>
+	<highgui.h>
+	"equi_gen_buf.h"
+
+1375436591 /home/dan/Dropbox/FluidPixel/FP_StreamTimelapse/BPStreamViewer/equi_gen_buf.h
+
+1375451078 source:/home/dan/Dropbox/FluidPixel/FP_StreamTimelapse/BPStreamViewer/image.cpp
+	<iostream>
+	<cassert>
+	<opencv2/core/core.hpp>
+	<opencv2/highgui/highgui.hpp>
+	"image.h"
+
+1375451115 /home/dan/Dropbox/FluidPixel/FP_StreamTimelapse/BPStreamViewer/image.h
+
+1374066109 source:/home/dan/Dropbox/FluidPixel/FP_StreamTimelapse/BPStreamViewer/lib/esShader.c
+	"esUtil.h"
+	<stdlib.h>
+
+1373542761 /home/dan/Dropbox/FluidPixel/FP_StreamTimelapse/BPStreamViewer/lib/esUtil.h
+	<GLES2/gl2.h>
+	<EGL/egl.h>
+
+1373542761 source:/home/dan/Dropbox/FluidPixel/FP_StreamTimelapse/BPStreamViewer/lib/esShapes.c
+	"esUtil.h"
+	<stdlib.h>
+	<math.h>
+	<string.h>
+
+1373542761 source:/home/dan/Dropbox/FluidPixel/FP_StreamTimelapse/BPStreamViewer/lib/esTransform.c
+	"esUtil.h"
+	<math.h>
+	<string.h>
+
+1373542761 source:/home/dan/Dropbox/FluidPixel/FP_StreamTimelapse/BPStreamViewer/lib/esUtil.c
+	<stdio.h>
+	<stdlib.h>
+	<string.h>
+	<stdarg.h>
+	<sys/time.h>
+	<GLES2/gl2.h>
+	<EGL/egl.h>
+	"esUtil.h"
+	"bcm_host.h"
+	<X11/Xlib.h>
+	<X11/Xatom.h>
+	<X11/Xutil.h>
+
+1376046852 source:/home/dan/Dropbox/FluidPixel/FP_StreamTimelapse/BPStreamViewer/main.cpp
+	<iostream>
+	<cassert>
+	<cstdlib>
+	<cmath>
+	<cstdio>
+	<ctime>
+	<pthread.h>
+	"opencv2/opencv.hpp"
+	"lib/esUtil.h"
+	"image.h"
+	"equi_gen_buf.h"
+
