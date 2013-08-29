@@ -22,7 +22,7 @@ e.g. To calculate the SD card you need for a timelapse lasting 7 days, taking a 
 
 ```python tl_calc.py 2000 604800 120```
 
-Which should calculate a minimum SD card size of around 16GB.
+Which should calculate a minimum SD card size of 16942.72 MB, hence a 32GB card is recommended.
 
 tl_gen.sh
 ---------
