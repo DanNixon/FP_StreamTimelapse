@@ -13,7 +13,7 @@ In addition to the general requirements:
 	-	[poster](https://pypi.python.org/pypi/poster/)
 	-	[pyinotify](https://github.com/seb-m/pyinotify)
 -	Server
-	-	[mjpg-streamer](http://sourceforge.net/projects/mjpg-streamer/) ```.deb``` package, [this](http://liangsun.org/posts/resolve-error-version-number-does-not-start-with-digit) will be useful
+	-	[mjpg-streamer](http://sourceforge.net/projects/mjpg-streamer/) ```.deb``` package, [this](http://liangsun.org/posts/resolve-error-version-number-does-not-start-with-digit) shows how to deal with the dpkg error
 	-	```libjpeg62```
 	-	```php5```
 	-	```apache2```

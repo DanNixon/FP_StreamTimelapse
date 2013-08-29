@@ -3,7 +3,7 @@ FP_StreamTimelapse
 
 360 degree timelapse recorder for BubbleScope with MJPEG streaming to run on the RasPi.
 
-Allows capturing of timelapse frames at a given interval and streaming over a MJPG stream during delay period.
+Allows capturing of timelapse frames at a given interval and streaming over a MJPG stream during delay period, also see the ```cloud_streaming``` folder for an example of how to stream to multiple clients efficiently using an intermediate server.
 
 Application can run in 3 "modes" depending on the configuration of run variables:
 
