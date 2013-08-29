@@ -21,4 +21,6 @@ In addition to the general requirements:
 Setup
 -----
 
+Both ```upload.php``` and ```imageWatcher.py``` have a key variable which must be set to the same value on both scripts (a very simplistic authentication for this demo).
+
 See setup details in each folder for setup specifics for Pi and server.
