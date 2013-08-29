@@ -12,3 +12,23 @@ Application can run in 3 "modes" depending on the configuration of run variables
 3.	Location aware timelapse: same as location recording but will only capture a new timelapse image if a certain distance has been covered since the last image was captured
 
 There is also a sample viewer application which can unwrap an MJPG stream from the Pi or cloud streaming server.
+
+ti_calc.py
+----------
+
+The ```ti_calc.py``` tool can be used to calculate the size of SD card you will need for a specific timelapse configuration.
+
+e.g. To calculate the SD card you need for a timelapse lasting 7 days, taking a 2000x2000 image every 2 minutes use the following command:
+
+```python tl_calc.py 2000 604800 120```
+
+Which should calculate a minimum SD card size of around 16GB.
+
+tl_gen.sh
+---------
+
+Simple script to generate an MP4 timelapse video.
+
+Requires ffmpeg.
+
+Usage: ```./tl_gen.sh ./equi/img%d_e.jpg timelapse.mp4``` will generate a timeplapse video named "timelaspe.mp4" from images in the "equi" folder with filename numbering img0_e.jpg, img1_e.jpg...
