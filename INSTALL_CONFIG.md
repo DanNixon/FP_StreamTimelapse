@@ -19,7 +19,7 @@ Software Installation
 
 2.  Clone repo onto Pi SD card
 3.  Set path to stream_tl in ```start_timelapse.sh```, ```stop_timelaspe.sh``` and ```recovery.sh```
-4.  Optionally use ```crontab -e -u pi``` to start capture on boot using command and line from ```crontab.txt```
+4.  Optionally use ```crontab -e -u pi``` to start capture on boot by adding the following line to the crontab: ```@reboot /home/pi/stream_tl/start_timelapse.sh 10 >> /home/pi/stream_tl/cron_tl.log```
 5. Set execute permissions for the user which will run the streaming app for each of the ```*.sh``` files and ```mjpg_streamer``` executable
 
 Hardware Installation
