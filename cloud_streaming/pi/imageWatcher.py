@@ -29,7 +29,7 @@ def upload_handler():
 		print "error"
 		pass
 	datagen, headers = multipart_encode(post_data)
-	request = urllib2.Request("http://37.139.30.37/upload.php", datagen, headers)
+	request = urllib2.Request("http://[HOST_IP]/upload.php", datagen, headers)
 	result = urllib2.urlopen(request).read()
 	if result != "FRAME_UPLOAD":
 		print result

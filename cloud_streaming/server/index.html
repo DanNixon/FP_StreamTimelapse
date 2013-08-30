@@ -11,6 +11,8 @@
 <script>
 	var map;
 	var marker;
+	var s_unit = 0;
+	var a_unit = 0;
 
 	function httpGet(theUrl)
 	{
@@ -22,7 +24,7 @@
 	}
 
 	function initialize() {
-	  var gps_data = JSON.parse(httpGet("http://37.139.30.37/gps.txt"));
+	  var gps_data = JSON.parse(httpGet("http://[HOST_IP]/gps.txt"));
 	  var current_pos = new google.maps.LatLng(gps_data.lat, gps_data.lon);
 	  var mapOptions = {
 	    zoom: 14,
@@ -48,14 +50,88 @@
 
 	function update_map()
 	{
-		var gps_data = JSON.parse(httpGet("http://37.139.30.37/gps.txt"));
+		var gps_data = JSON.parse(httpGet("http://[HOST_IP]/gps.txt"));
 		var current_pos = new google.maps.LatLng(gps_data.lat, gps_data.lon);
 		marker.setPosition(current_pos);
 		document.getElementById("lat").innerText = gps_data.lat;
 		document.getElementById("lon").innerText = gps_data.lon;
-		document.getElementById("speed").innerText = gps_data.speed;
+		speed = 0;	
+		switch(s_unit)
+		{
+		case 0:
+			speed = gps_data.speed;
+			break;
+		case 1:
+			speed = gps_data.speed * 3.6;
+			break;
+		case 2:
+			speed = gps_data.speed * 2.23693629;
+			break;
+		}
+		document.getElementById("speed").innerText = speed.toFixed(3);
 		document.getElementById("track").innerText = gps_data.track;
-		document.getElementById("alti").innerText = gps_data.alt;
+		document.getElementById("c-dir").innerText = get_compass_heading(gps_data.track);
+		alt = 0;
+		switch(a_unit)
+		{
+		case 0:
+			alt = gps_data.alt;
+			break;
+		case 1:
+			alt = gps_data.alt * 3.2808399;
+			break;
+		}
+		document.getElementById("alti").innerText = alt.toFixed(3);
+	}
+
+	function get_compass_heading(track)
+	{
+		if(track < 22.5) return "N";
+		if(track < 67.5) return "NE";
+		if(track < 112.5) return "E";
+		if(track < 157.5) return "SE";
+		if(track < 202.5) return "S";
+		if(track < 247.5) return "SW";
+		if(track < 292.5) return "W";
+		if(track < 337.5) return "NW";
+		return "N";
+	}
+
+	function change_speed_unit()
+	{
+		s_unit++;
+		if(s_unit == 3) s_unit = 0;
+		s_unit_t = "";
+		switch(s_unit)
+		{
+		case 0:
+			s_unit_t = "ms-1";
+			break;
+		case 1:
+			s_unit_t = "Kph";
+			break;
+		case 2:
+			s_unit_t = "mph";
+			break;
+		}
+		document.getElementById("s-unit").innerText = s_unit_t;
+	}
+
+	function change_alt_unit()
+	{
+		a_unit++;
+		if(a_unit == 2) a_unit = 0;
+		a_unit_t = "";
+		switch(a_unit)
+		{
+		case 0:
+			a_unit_t = "m";
+			break;
+		case 1:
+			a_unit_t = "ft";
+			break;
+		}
+		document.getElementById("a-unit").innerText = a_unit_t;
 	}
 
 	google.maps.event.addDomListener(window, 'load', initialize);
@@ -63,15 +139,15 @@
 </script>
 </head>
 <body>
-<img src="http://37.139.30.37:8080/?action=stream" />
+<img src="http://[HOST_IP]:8080/?action=stream" />
 <br />
 <div id="map-canvas"></div>
 <p>
 Latitude: <span id="lat"></span>&deg;<br />
 Longitude: <span id="lon"></span>&deg;<br />
-Speed: <span id="speed"></span> ms-1<br />
-Heading: <span id="track"></span>&deg;<br />
-Altitude: <span id="alti"></span> m
+Speed: <span id="speed"></span> <a href="#" onClick="change_speed_unit()"><span id="s-unit">ms-1</span></a><br />
+Heading: <span id="track"></span>&deg; (<span id="c-dir"> </span>)<br />
+Altitude: <span id="alti"></span> <a href="#" onClick="change_alt_unit()"><span id="a-unit">m</span></a>
 </p>
 </body>
 </html>
