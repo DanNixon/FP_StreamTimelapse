@@ -18,7 +18,7 @@ def upload_handler():
 	gps_string = gps_file.read()
 	gps_file.close()
 	gps_data = gps_string.split()
-	datagen, headers = multipart_encode({"frame" : open(local_file, "rb"), "key" : service_key, "lat" : gps_data[0], "lon" : gps_data[1], "track" : gps_data[3], "speed" : gps_data[4]})
+	datagen, headers = multipart_encode({"frame" : open(local_file, "rb"), "key" : service_key, "lat" : gps_data[0], "lon" : gps_data[1], "track" : gps_data[3], "speed" : gps_data[4], "alt" : gps_data[2]})
 	request = urllib2.Request("http://37.139.30.37/upload.php", datagen, headers)
 	result = urllib2.urlopen(request).read()
 	if result != "FRAME_UPLOAD":
