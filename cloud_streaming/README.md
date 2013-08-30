@@ -3,6 +3,8 @@ Cloud Streaming Example
 
 A sample/test showing the use of an intermediate webserver between the Pi and the client, reducing load on the Pi.
 
+Also included is a sample web page which allows viewing an unwrapped stream and the current GPS location using Google Maps.
+
 Requirements
 ------------
 

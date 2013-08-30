@@ -43,7 +43,6 @@ else
 	#echo "Performing auto recovery"
 	#dir_found=0
 	#i=0
-	#directory=""
 	#while [ $dir_found == 0 ]
 	#do
 	#	if [ -d "recovery"$i ]; then
