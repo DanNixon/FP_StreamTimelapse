@@ -14,8 +14,22 @@ def upload_handler():
 		print "imageWatcher: image_{0}".format(upload_count)
 	shutil.copyfile(frame_filename, local_file)
 	register_openers()
-	datagen, headers = multipart_encode({"frame" : open(local_file, "rb"), "key" : service_key})
-	request = urllib2.Request("http://[IP_HOST]/upload.php", datagen, headers)
+	gps_file = open("./gps.temp")
+	gps_string = gps_file.read()
+	gps_file.close()
+	gps_data = gps_string.split()
+	post_data = {"frame" : open(local_file, "rb"), "key" : service_key}
+	try:
+		post_data["lat"] = gps_data[0]
+		post_data["lon"] = gps_data[1]
+		post_data["alt"] = gps_data[2]
+		post_data["track"] = gps_data[3]
+		post_data["speed"] = gps_data[4]
+	except IndexError:
+		print "error"
+		pass
+	datagen, headers = multipart_encode(post_data)
+	request = urllib2.Request("http://[HOST_IP]/upload.php", datagen, headers)
 	result = urllib2.urlopen(request).read()
 	if result != "FRAME_UPLOAD":
 		print result
