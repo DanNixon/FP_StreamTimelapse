@@ -15,15 +15,18 @@ do
 done
 
 mv $1 ./f$i/original.jpg
-./equi_gen ./f$i/original.jpg ./f$i/equi.jpg
 
-##Uncomment to stream equi
-cp ./f$i/equi.jpg ./frame/i.jpg
+if [ -f ./f$i/original.jpg ]; then
+	./equi_gen ./f$i/original.jpg ./f$i/equi.jpg 400
 
-##Uncomment to stream original
-#cp ./f$i/original.jpg ./frame/i.jpg
+	##Uncomment to stream equi
+	cp ./f$i/equi.jpg ./frame/i.jpg
 
-##Do other things with original and equi images here if needed
-##e.g. numbering for archive, etc
+	##Uncomment to stream original
+	#cp ./f$i/original.jpg ./frame/i.jpg
+
+	##Do other things with original and equi images here if needed
+	##e.g. numbering for archive, etc
+fi
 
 rm -r ./f$i
