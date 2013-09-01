@@ -13,10 +13,10 @@ Application can run in 3 "modes" depending on the configuration of run variables
 
 There is also a sample viewer application which can unwrap an MJPG stream from the Pi or cloud streaming server.
 
-ti_calc.py
+tl_calc.py
 ----------
 
-The ```ti_calc.py``` tool can be used to calculate the size of SD card you will need for a specific timelapse configuration.
+The ```tl_calc.py``` tool can be used to calculate the size of SD card you will need for a specific timelapse configuration.
 
 e.g. To calculate the SD card you need for a timelapse lasting 7 days, taking a 2000x2000 image every 2 minutes use the following command:
 
