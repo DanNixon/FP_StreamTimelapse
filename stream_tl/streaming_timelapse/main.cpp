@@ -24,7 +24,7 @@ const int stream_delay = 500;
 const int min_tl_delay = 5000; //>500
 const int tl_cap_run_in = 80; //>50, delay between starting camera in stills mode and taking image
 const char *frame_location = "s_frame.jpg";
-const char *img_count_filename = "image_next.log";
+const char *img_count_filename = "last_frame_no.log";
 
 float min_cap_dist;
 int use_gps = 0;
