@@ -18,7 +18,9 @@ If launched using cron, a log (cron_tl.log) will be created which details starti
 Exporting a timelapse
 ---------------------
 
-Both the raw images captured by the camera and the equi. images are stored in the tl_images folder, from here they can be copied from the Pi either using SFTP or by mounting the SD card on a desktop.
+Both the raw images captured by the camera and the equi. images are stored in the "tl_images" folder (or other folder if configured in ```start_timelapse.sh```), from here they can be copied from the Pi either using SFTP or by mounting the SD card on a desktop.
+
+The file ```image_next.log``` is used to identify the frame number of the next timeplapse frame, which is used to continue a timelapse when the script is stopped then restarted (e.g. power failure), this also provides a way to export a partial timelapse and continue capturing from the last frame number so that the folders of several small consecutive captures can be combined and  converted to a single timelapse video (which is useful when recording a timelapse which would not fit on a single SD card).
 
 The ```tl_gen``` script can then be used to create a timelapse video of these images, a sample command would be the following: ```./tl_gen.sh ./equi/[filename].jpg ./[vid_out].mp4```, where [filename] is the filename given in the config stage and [vid_out] is the name of the resulting MP4 video file.
 
