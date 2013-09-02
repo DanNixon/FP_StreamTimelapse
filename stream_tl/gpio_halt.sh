@@ -1,6 +1,9 @@
 #!/bin/bash
 
+##GPIO to poll, use an I2C pin as they have internal pull up resistors
 GPIO_PIN="2"
+
+##0 for Low, 1 for High
 HALT_ON="0"
 
 echo $GPIO_PIN > /sys/class/gpio/export

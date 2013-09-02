@@ -46,13 +46,17 @@ Hardware Installation
 	-	"/dev/ttyAMA0", this is the name of the BCM UART which the GPS is attached to
 	-	"-n -G", ```-n``` poll GPS before clients have connected (needed for some apps), ```-G``` allow GPSd to be accessed externally (good to allow other networked devices to get GPS data)
 	-	Keep control socket as default
+11.	Configure hardware controls:
+	-	Solder a 2 pin .1" header onto the unpopulated P6 header on the Pi (between voltage regulator RG2 and HDMI port)
+	-	Connect a PTM switch between pin 1 of P6 (the pin closest to the edge of the board, with a square copper pad) and any ground (pin 2 of P6 is ground). This will reset the BCM2835, booting the Pi if it has been halted or the equivalent of hard rebooting the Pi.
+	-	Connect  PTM switch between pin 3 of the main GPIO header and ground. This pin is polled every second by ```gpio_halt.sh``` and runs ```stop_timelapse.sh``` and halts the Pi if it becomes low.
 
 Configure timelapse
 -------------------
 
-11.  Configure delay between timelapse captures, this is set in [start_timelapse.sh](https://github.com/DanNixon/FP_StreamTimelapse/blob/master/stream_tl/start_timelapse.sh), by default it is set to 5000ms.
-12.	Configure timelapse image filenames, this can be set in [start_timelapse.sh](https://github.com/DanNixon/FP_StreamTimelapse/blob/master/stream_tl/start_timelapse.sh), where ```%d``` is the frame number (this is very important, if the filename does not have a %d the same file will be overwritten every capture)
-13.	Configure GPS options:
+12.  Configure delay between timelapse captures, this is set in [start_timelapse.sh](https://github.com/DanNixon/FP_StreamTimelapse/blob/master/stream_tl/start_timelapse.sh), by default it is set to 5000ms.
+13.	Configure timelapse image filenames, this can be set in [start_timelapse.sh](https://github.com/DanNixon/FP_StreamTimelapse/blob/master/stream_tl/start_timelapse.sh), where ```%d``` is the frame number (this is very important, if the filename does not have a %d the same file will be overwritten every capture)
+14.	Configure GPS options:
 	-	GPS can be enabled/disabled by editing the ```USE_GPS``` line of start_timelapse.sh
 	-	To record GPS data only set min capture distance in start_timelapse.sh to 0
 	-	Alternatively, set this to a distance (either miles or KM, see below) which has to have been covered in the timelapse delay if a new image is to be taken
@@ -61,12 +65,12 @@ Configure timelapse
 Configure streaming_timelapse
 -----------------------------
 
-14.	Configure timelapse camera options ( [main.cpp](https://github.com/DanNixon/FP_StreamTimelapse/blob/master/stream_tl/streaming_timelapse/main.cpp) )
-15.	Configure MJPG stream camera options ( [main.cpp](https://github.com/DanNixon/FP_StreamTimelapse/blob/master/stream_tl/streaming_timelapse/main.cpp) )
-16.	Configure misc timelapse options ( [main.cpp](https://github.com/DanNixon/FP_StreamTimelapse/blob/master/stream_tl/streaming_timelapse/main.cpp) )
+15.	Configure timelapse camera options ( [main.cpp](https://github.com/DanNixon/FP_StreamTimelapse/blob/master/stream_tl/streaming_timelapse/main.cpp) )
+16.	Configure MJPG stream camera options ( [main.cpp](https://github.com/DanNixon/FP_StreamTimelapse/blob/master/stream_tl/streaming_timelapse/main.cpp) )
+17.	Configure misc timelapse options ( [main.cpp](https://github.com/DanNixon/FP_StreamTimelapse/blob/master/stream_tl/streaming_timelapse/main.cpp) )
 	-	min_tl_delay = having a timelapse period too low reduced stream consistency, a minimum helps prevent that
 	-	tl_cap_run_in = time camera module is running for before capturing a timelapse image, improves consistency of exposure
-17.	Configure equi. image generation ( [main.cpp](https://github.com/DanNixon/FP_StreamTimelapse/blob/master/stream_tl/streaming_timelapse/main.cpp) )
+18.	Configure equi. image generation ( [main.cpp](https://github.com/DanNixon/FP_StreamTimelapse/blob/master/stream_tl/streaming_timelapse/main.cpp) )
 	-	Parameters same as general equi. generation
 
 Optional Stuff
