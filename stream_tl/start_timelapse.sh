@@ -8,7 +8,7 @@ echo `date -u`
 USE_GPS="1"
 
 echo "Removing old frame image"
-rm s_frame.jpg
+sudo rm s_frame.jpg
 
 echo "Creating image folder if not exist"
 mkdir tl_images
