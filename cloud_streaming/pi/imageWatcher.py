@@ -30,7 +30,7 @@ def upload_handler():
 			print "GPS Error"
 			pass
 		datagen, headers = multipart_encode(post_data)
-		request = urllib2.Request("http://[IP_HOST]/upload.php", datagen, headers)
+		request = urllib2.Request("http://37.139.30.37/upload.php", datagen, headers)
 		result = urllib2.urlopen(request).read()
 		if result != "FRAME_UPLOAD":
 			print result
