@@ -45,7 +45,7 @@ GPS time is saved in ```EXIF.GPSInfo.GPSDateStamp``` and ```EXIF.GPSInfo.GPSTime
 Troubleshooting
 ---------------
 
-Use either ```ps aux | grep stream``` or ```screen -ls``` to check status of capture, ~5 processes should be shown with ps and two screens should be shown with screen.
+Use either ```ps aux | grep stream``` or ```screen -ls``` to check status of capture, ~8 processes should be shown with ps and 3-5 screens should be shown with screen (depending on feature configuration).
 
 From the root folder (stream_tl) use ```tail -f screenlog.0``` to monitor capture in real time.
 
