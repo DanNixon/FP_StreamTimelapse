@@ -13,6 +13,8 @@ Application can run in 3 "modes" depending on the configuration of run variables
 
 There is also a sample viewer application which can unwrap an MJPG stream from the Pi or cloud streaming server.
 
+Custom handlers for new streaming frames and GPS data can be configured to start using the ```start_timelapse.sh``` script (usually you would want to start it in a new ```screen``` session) and stop using ```stop_timelapse.sh```. They must be configured to watch ```gps.temp``` for GPS data (in format ```[latitude] [longitude] [altitude] [track] [speed] [timestamp]```) and ```s_frame.jpg``` for streaming frames.
+
 ti_calc.py
 ----------
 
