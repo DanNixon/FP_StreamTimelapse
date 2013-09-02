@@ -8,5 +8,7 @@ Setup the image uploader on the Pi
 	-	```screen -L -d -m -S mjpg_stream ./mjpg-streamer/start.sh``` to
 	-	```screen -L -d -m -S mjpg_stream python ./imageWatcher.py```
 3.	Append the following lines to ```stop_timelapse.sh```:
+	-	```echo "Killing frame uploader"```
+	-	```sudo kill $(ps h --ppid $(screen -ls | grep gps | cut -d. -f1) -o pid)```
 	-	```echo "Removing queued streaming frames"```
 	-	```rm frame*.jpg```
