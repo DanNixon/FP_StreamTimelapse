@@ -2,7 +2,7 @@
 #include <cstdio>
 #include <cstdlib>
 #include <cmath>
-#include <time.h>
+#include <ctime>
 #include <pthread.h>
 #include <signal.h>
 
@@ -19,7 +19,8 @@ using namespace std;
 using namespace cv;
 
 const char *rs_tl_args = "-n -w 2000 -h 2000 -awb sun -ex backlight -ev -2 -mm backlit --exif EXIF.MakerNote=BubbleScopeTimelapseFrame";
-const char *rs_strm_args = "-tl 500 -n -th 0:0:0 -w 400 -h 400 -awb sun -ex backlight -ev -4 -mm backlit";
+const char *rs_strm_args = "-n -th 0:0:0 -w 400 -h 400 -awb sun -ex backlight -ev -4 -mm backlit";
+const int stream_delay = 250;
 const int min_tl_delay = 500; //>500
 const int tl_cap_run_in = 80; //>50, delay between starting camera in stills mode and taking image
 const char *frame_location = "s_frame.jpg";
@@ -88,8 +89,6 @@ int main(int argc, char **argv)
     sscanf(argv[4], "%d", &f_count);
     sscanf(argv[5], "%f", &min_cap_dist);
     sscanf(argv[6], "%d", &use_gps);
-
-    delay /= 2; //There is some very weird clock skew that seems to cause the Pi clock to run 0.5 times that of the GPS clock.
 
     cout<<"Timelapse capture delay: "<<delay<<"ms"<<endl;
     cout<<"Requested frames (0=infinate): "<<f_count<<endl;
@@ -208,12 +207,36 @@ int main(int argc, char **argv)
             frame++;
         }
 
-        //Start camera in timelapse mode to generate stream images
+        //Use multiple RaspStill commnds to capture streaming frames
+        int f_delay = stream_delay;
+        if(f_delay < tl_cap_run_in) f_delay = tl_cap_run_in;
         char stream_capture_cmd[100];
-        sprintf(stream_capture_cmd, "raspistill -o %s -t %d %s", frame_location,  (delay - tl_cap_run_in), rs_strm_args);
+        sprintf(stream_capture_cmd, "raspistill -o %s -t %d %s", frame_location, f_delay, rs_strm_args);
 
         cout<<"Starting streaming capture"<<endl;
-        system(stream_capture_cmd);
+        time_t timelapse_start;
+        time(&timelapse_start);
+        long elapsed_ms = 0;
+
+        do
+        {
+            //Stop if needed
+            if(!run)
+            {
+                //If stopping, wait for images to process
+                if(capture_now) pthread_join(proc_thread_id, NULL);
+                break;
+            }
+
+            system(stream_capture_cmd);
+
+            time_t c_time;
+            time(&c_time);
+            double elapsed_sec = difftime(c_time, timelapse_start);
+            elapsed_ms = (long) (elapsed_sec * 1000);
+        }
+        while (elapsed_ms < delay);
+
         cout<<"Streaming capture end"<<endl;
 
         //Check if frame has reached capture limit
@@ -223,13 +246,7 @@ int main(int argc, char **argv)
             else run = 1;
         }
 
-        //Stop if needed
-        if(!run)
-        {
-            //If stopping, wait for images to process
-            if(capture_now) pthread_join(proc_thread_id, NULL);
-            break;
-        }
+
         //Deallocate resources for terminated processing threads
         if(capture_now) pthread_detach(proc_thread_id);
     }
