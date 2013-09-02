@@ -20,8 +20,8 @@ using namespace cv;
 
 const char *rs_tl_args = "-n -w 2000 -h 2000 -awb sun -ex backlight -ev -2 -mm backlit --exif EXIF.MakerNote=BubbleScopeTimelapseFrame";
 const char *rs_strm_args = "-n -th 0:0:0 -w 400 -h 400 -awb sun -ex backlight -ev -4 -mm backlit";
-const int stream_delay = 250;
-const int min_tl_delay = 500; //>500
+const int stream_delay = 500;
+const int min_tl_delay = 5000; //>500
 const int tl_cap_run_in = 80; //>50, delay between starting camera in stills mode and taking image
 const char *frame_location = "s_frame.jpg";
 
