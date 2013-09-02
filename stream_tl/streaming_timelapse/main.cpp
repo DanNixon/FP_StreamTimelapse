@@ -24,6 +24,7 @@ const int stream_delay = 500;
 const int min_tl_delay = 5000; //>500
 const int tl_cap_run_in = 80; //>50, delay between starting camera in stills mode and taking image
 const char *frame_location = "s_frame.jpg";
+const char *img_count_filename = "image_next.log";
 
 float min_cap_dist;
 int use_gps = 0;
@@ -117,17 +118,24 @@ int main(int argc, char **argv)
         cout<<"Got GPS lock: "<<lock<<endl;
     }
 
+    char image_count_path[50];
+    sprintf(image_count_path, "%s/%s", save_path, img_count_filename);
+
     //Get number of existing images, so as not to overwrite images in loss of power
-    char file_count_cmd[50];
-    sprintf(file_count_cmd, "ls %s/original | wc -l", save_path);
-    FILE *file_count_reader = popen(file_count_cmd, "r");
-    fscanf(file_count_reader, "%d", &curr_img_count);
-    pclose(file_count_reader);
-    cout<<"Detected "<<curr_img_count<<" images in original folder"<<endl;
+    frame = 0;
+    FILE *img_count_file;
+    img_count_file = fopen(image_count_path, "r");
+    if(img_count_file != NULL)
+    {
+        char ic_str[10];
+        fgets(ic_str, 10, img_count_file);
+        sscanf(ic_str, "%ld", &frame);
+        fclose(img_count_file);
+        frame++;
+    }
 
     //Start capturing after last image in folder
-    frame = curr_img_count;
-    if(f_count) f_count += curr_img_count;
+    if(f_count) f_count += frame;
     cout<<"Will start capture at image "<<frame<<" and capture up to image "<<f_count<<endl;
 
     //Ensure delay is not too small, ensures reasonable quality stream and time for switching camera modes
@@ -199,6 +207,13 @@ int main(int argc, char **argv)
                 sprintf(file_path, "./%s/original/%s.jpg", save_path, frame_fn);
                 set_gps_exif(file_path, current_lat, current_long, alt, track, speed, timestamp);
             }
+
+            FILE *num_file;
+            num_file = fopen(image_count_path, "w");
+            char num_str[10];
+            sprintf(num_str, "%ld", frame);
+            fputs(num_str, num_file);
+            fclose(num_file);
 
             //Start thread to convert image (~900ms for conversion)
             int thread_state = pthread_create(&proc_thread_id, NULL, process_image, frame_fn);

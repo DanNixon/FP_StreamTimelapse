@@ -27,16 +27,19 @@ def upload_handler():
 			post_data["track"] = gps_data[3]
 			post_data["speed"] = gps_data[4]
 		except IndexError:
-			print "GPS Error"
+			print "imageWatcher: GPS Error"
 			pass
 		datagen, headers = multipart_encode(post_data)
-		request = urllib2.Request("http://37.139.30.37/upload.php", datagen, headers)
+		request = urllib2.Request("http://[IP_HOST]/upload.php", datagen, headers)
 		result = urllib2.urlopen(request).read()
 		if result != "FRAME_UPLOAD":
 			print result
 		os.remove(local_file)
 	except urllib2.URLError:
-		print "Network Error"
+		print "imageWatcher: Network Error"
+		pass
+	except IOError:
+		print "imageWatcher: IO Error"
 		pass
 
 wm = pyinotify.WatchManager()
