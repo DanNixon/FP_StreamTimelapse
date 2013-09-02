@@ -32,11 +32,8 @@
 	    mapTypeId: google.maps.MapTypeId.STREET
 	  };
 	  map = new google.maps.Map(document.getElementById('map-canvas'), mapOptions);
-	  
-	  marker = new google.maps.Marker({
-		position: current_pos,
-		map: map
-		});
+	  marker = new google.maps.Marker({ map: map });
+	  update_map();
 	}
 
 	function httpGet(theUrl)
@@ -53,6 +50,15 @@
 		var gps_data = JSON.parse(httpGet("http://[HOST_IP]/gps.txt"));
 		var current_pos = new google.maps.LatLng(gps_data.lat, gps_data.lon);
 		marker.setPosition(current_pos);
+		marker.setIcon(new google.maps.Marker({  
+	        	path: google.maps.SymbolPath.FORWARD_CLOSED_ARROW,
+	        	fillOpacity: 1,
+			strokeWeight: 2,
+			strokeColor: "rgb(100, 100, 20)",
+        		scale: 5,
+			fillColor: "rgb(50, 190, 220)",
+			rotation: gps_data.track
+	        }));
 		document.getElementById("lat").innerText = gps_data.lat;
 		document.getElementById("lon").innerText = gps_data.lon;
 		speed = 0;	
