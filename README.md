@@ -15,10 +15,10 @@ There is also a sample viewer application which can unwrap an MJPG stream from t
 
 Custom handlers for new streaming frames and GPS data can be configured to start using the ```start_timelapse.sh``` script (usually you would want to start it in a new ```screen``` session) and stop using ```stop_timelapse.sh```. They must be configured to watch ```gps.temp``` for GPS data (in format ```[latitude] [longitude] [altitude] [track] [speed] [timestamp]```) and ```s_frame.jpg``` for streaming frames.
 
-ti_calc.py
-----------
+tl_calc.py
+=======
 
-The ```ti_calc.py``` tool can be used to calculate the size of SD card you will need for a specific timelapse configuration.
+The ```tl_calc.py``` tool can be used to calculate the size of SD card you will need for a specific timelapse configuration.
 
 e.g. To calculate the SD card you need for a timelapse lasting 7 days, taking a 2000x2000 image every 2 minutes use the following command:
 
