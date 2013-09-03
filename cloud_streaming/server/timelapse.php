@@ -31,5 +31,8 @@ if(isset($_GET['tl'])) {
 	echo("<p id='filename'>".$tl_filename."</p>");
 }
 ?>
+<br />
+<p><a href="/tl_frames">View All Timelapse Frames</a></p>
+<p><a href="/tl_exports">View All Timelapse Videos</a></p>
 </body>
 </html>
