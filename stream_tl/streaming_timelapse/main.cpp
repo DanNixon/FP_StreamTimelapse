@@ -32,6 +32,7 @@ char *save_path;
 int run;
 float last_lat = 0.0f;
 float last_long = 0.0f;
+char *post_tl_cmd;
 
 //Safely terminated the application
 void terminate(int arg)
@@ -74,6 +75,15 @@ void *process_image(void *arg)
     equi_image->setExifData(original_exif_data);
     equi_image->writeMetadata();
 
+    //Execute post capturew command
+    if(strlen(post_tl_cmd) != 0)
+    {
+        char post_cmd[200];
+        sprintf(post_cmd, post_tl_cmd, img_fn);
+        int rVal = system(post_cmd);
+        cout<<"Excuted command: "<<post_cmd<<", got return value "<<rVal<<endl;
+    }
+
     return NULL;
 }
 
@@ -90,6 +100,8 @@ int main(int argc, char **argv)
     sscanf(argv[4], "%d", &f_count);
     sscanf(argv[5], "%f", &min_cap_dist);
     sscanf(argv[6], "%d", &use_gps);
+    post_tl_cmd = "";
+    if(argc > 7) { post_tl_cmd = argv[7]; }
 
     cout<<"Timelapse capture delay: "<<delay<<"ms"<<endl;
     cout<<"Requested frames (0=infinate): "<<f_count<<endl;
@@ -250,8 +262,7 @@ int main(int argc, char **argv)
             double elapsed_sec = difftime(c_time, timelapse_start);
             elapsed_ms = (long) (elapsed_sec * 1000);
         }
-        while (elapsed_ms < delay);
-
+        while (elapsed_ms <= delay);
         cout<<"Streaming capture end"<<endl;
 
         //Check if frame has reached capture limit
