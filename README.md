@@ -31,6 +31,6 @@ tl_gen.sh
 
 Simple script to generate an MP4 timelapse video.
 
-Requires ```ffmpeg```.
+Requires ```ffmpeg``` and ```x264```.
 
 Usage: ```./tl_gen.sh ./equi/img%d_e.jpg timelapse.mp4``` will generate a timeplapse video named "timelaspe.mp4" from images in the "equi" folder with filename numbering img0_e.jpg, img1_e.jpg...
