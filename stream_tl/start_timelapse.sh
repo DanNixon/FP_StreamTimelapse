@@ -28,7 +28,7 @@ echo "Starting MJPEG server"
 screen -L -d -m -S mjpg_stream python ./mjpg-streamer/start.sh
 
 echo "Starting capture"
-##ARGS: [output folder] [image name (%d is frame number)] [timelapse delay ms] [capture time ms (0 for capture untill SIGTERM)] [minimum capture distance] [use GPS]
+##ARGS: [output folder] [image name (%d is frame number)] [timelapse delay ms] [capture time ms (0 for capture untill SIGTERM)] [minimum capture distance] [use GPS] [command to ececute after image processing]
 screen -L -d -m -S stl_capture sudo ./streaming_timelapse/streaming_timelapse tl_images i%d 30000 0 0.0 $USE_GPS
 
 sleep 2

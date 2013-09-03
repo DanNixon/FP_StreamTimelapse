@@ -5,6 +5,8 @@ A sample/test showing the use of an intermediate webserver between the Pi and th
 
 Also included is a sample web page which allows viewing an unwrapped stream and the current GPS location using Google Maps.
 
+This also allows uploading of the timelapse frames to a server and having the server create the timelaspe video, this simplifies the process of exporting content form the Pi and allows the PI to capture for a longer period of time (assuming a stable internet connection is available) as frames that have been uploaded will be automatically deleted.
+
 Requirements
 ------------
 
@@ -19,6 +21,15 @@ In addition to the general requirements:
 	-	```libjpeg62```
 	-	```php5```
 	-	```apache2```
+	-	```ffmpeg```
+	-	```libavcodec-extra-53``` (on Ubuntu server 12.04)
+
+Usage
+-----
+
+Browse to the root of the server to see the sample streaming page.
+
+To export a timelapse browse to ``timelapse.php``` you can then select to export either a timelaspe using the original frames or equirectangular images, once conversion has completed you will be able to download the MP4 video.
 
 Setup
 -----
