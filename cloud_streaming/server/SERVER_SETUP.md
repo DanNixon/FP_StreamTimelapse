@@ -12,4 +12,6 @@ Setup streaming server:
 Note
 ----
 
+It may be necessary to change the ```upload_max_filesize``` and ```post_max_size``` parameters in ```php.ini``` to upload original images.
+
 You may see lots of this error ```libdc1394 error: Failed to initialize libdc1394``` in Apache ```error.log``` (particularly on virtual server instances), it is to do with camera hardware communication and comes from OpenCV, you can ignore it.
