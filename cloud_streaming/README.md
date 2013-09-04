@@ -7,6 +7,8 @@ Also included is a sample web page which allows viewing an unwrapped stream and 
 
 This also allows uploading of the timelapse frames to a server and having the server create the timelaspe video, this simplifies the process of exporting content form the Pi and allows the PI to capture for a longer period of time (assuming a stable internet connection is available) as frames that have been uploaded will be automatically deleted.
 
+A CSV log of the GPS data is also stored in ```gps.log``` which is added to on every upload of a streaming frame.
+
 Requirements
 ------------
 

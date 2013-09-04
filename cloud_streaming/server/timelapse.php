@@ -14,7 +14,7 @@ function check_file() {
 	var filename = document.getElementById("filename").innerText;
 	var tl_url = "./tl_exports/" + filename;
 	if(file_exists(tl_url)) {
-		document.getElementById("filename").innerHTML = "<a href='" + tl_url + "'>Download Timelapse</a>";
+		document.getElementById("filename").innerHTML = "<a href='" + tl_url + "'>Downlaod Timelapse</a>";
 	}
 }
 

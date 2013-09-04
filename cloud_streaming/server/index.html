@@ -5,6 +5,11 @@
 	#map-canvas, #map_canvas {
 	  height: 300px;
 	  width: 300px;
+	  float: left;
+	}
+	#text-info {
+	  float: left;
+	  padding-left: 10px;
 	}
 </style>
 <script src="https://maps.googleapis.com/maps/api/js?v=3.exp&sensor=false"></script>
@@ -24,7 +29,7 @@
 	}
 
 	function initialize() {
-	  var gps_data = JSON.parse(httpGet("http://[HOST_IP]/gps.txt"));
+	  var gps_data = JSON.parse(httpGet("http://37.139.30.37/gps.temp"));
 	  var current_pos = new google.maps.LatLng(gps_data.lat, gps_data.lon);
 	  var mapOptions = {
 	    zoom: 14,
@@ -47,7 +52,7 @@
 
 	function update_map()
 	{
-		var gps_data = JSON.parse(httpGet("http://[HOST_IP]/gps.txt"));
+		var gps_data = JSON.parse(httpGet("http://37.139.30.37/gps.temp"));
 		var current_pos = new google.maps.LatLng(gps_data.lat, gps_data.lon);
 		marker.setPosition(current_pos);
 		marker.setIcon(new google.maps.Marker({  
@@ -88,6 +93,12 @@
 			break;
 		}
 		document.getElementById("alti").innerText = alt.toFixed(3);
+		document.getElementById("time").innerText = gps_data.time;
+
+		var cm = document.getElementById("map-follow").checked;
+		if(cm) {
+			map.setCenter(current_pos);
+		}
 	}
 
 	function get_compass_heading(track)
@@ -145,15 +156,19 @@
 </script>
 </head>
 <body>
-<img src="http://[HOST_IP]:8080/?action=stream" />
+<img src="http://37.139.30.37:8080/?action=stream" />
 <br />
 <div id="map-canvas"></div>
+<div id="text-info">
 <p>
 Latitude: <span id="lat"></span>&deg;<br />
 Longitude: <span id="lon"></span>&deg;<br />
 Speed: <span id="speed"></span> <a href="#" onClick="change_speed_unit()"><span id="s-unit">ms-1</span></a><br />
 Heading: <span id="track"></span>&deg; (<span id="c-dir"> </span>)<br />
-Altitude: <span id="alti"></span> <a href="#" onClick="change_alt_unit()"><span id="a-unit">m</span></a>
+Altitude: <span id="alti"></span> <a href="#" onClick="change_alt_unit()"><span id="a-unit">m</span></a><br />
+Timestamp: <soan id="time"></span>
 </p>
+<input type="checkbox" id="map-follow" checked="checked">Centre map on marker
+</div>
 </body>
 </html>
