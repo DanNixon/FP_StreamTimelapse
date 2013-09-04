@@ -29,7 +29,9 @@ Usage
 
 Browse to the root of the server to see the sample streaming page.
 
-To export a timelapse browse to ``timelapse.php``` you can then select to export either a timelaspe using the original frames or equirectangular images, once conversion has completed you will be able to download the MP4 video.
+To export a timelapse browse to ```timelapse.php``` you can then select to export either a timelaspe using the original frames or equirectangular images, once conversion has completed you will be able to download the MP4 video.
+
+Browse to ```timelapse_viewer.html``` to view the saved timelapse frames.
 
 Setup
 -----
