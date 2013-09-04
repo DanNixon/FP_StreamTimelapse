@@ -1,0 +1,300 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <title>Timelapse Viewer</title>
+    <style type="text/css">
+		#map-canvas, #map_canvas {
+			height: 300px;
+			width: 300px;
+			float: left;
+		}
+		#text-data {
+			padding-left: 10px;
+			float: left;
+			width: 200px;
+		}
+		button {
+			width: 50px;
+		}
+    </style>
+    <script src="https://maps.googleapis.com/maps/api/js?v=3.exp&sensor=false"></script>
+    <script>
+		var map;
+		var marker;
+		var line;
+
+		var s_unit = 0;
+		var a_unit = 0;
+		var frame = 0;
+		
+		var timer_id = -1;
+
+		function initialize() {
+		  var mapOptions = {
+			zoom: 15,
+			center: new google.maps.LatLng(54, -1),
+			mapTypeId: google.maps.MapTypeId.ROAD
+		  };
+
+		  map = new google.maps.Map(document.getElementById('map-canvas'), mapOptions);
+
+		  //var points = new Array();
+		  //for(var i = 0; i < gps_data.length; i++) {
+			//var lat = gps_data[i][1];
+			//var lon = gps_data[i][2];
+			//var position = new google.maps.LatLng(lat, lon);
+			//points.push(position);
+		  //}
+		  
+		  //line = new google.maps.Polyline({
+			//path: points,
+			//strokeColor: '#FF0000',
+			//strokeOpacity: 1.0,
+			//strokeWeight: 2
+		  //});
+
+		  //gps_path.setMap(map);
+		  
+		  map = new google.maps.Map(document.getElementById('map-canvas'), mapOptions);
+		  marker = new google.maps.Marker({ map: map });
+		  render(-1);
+		}
+
+		function httpGet(theUrl)
+		{
+			var xmlHttp = null;
+			xmlHttp = new XMLHttpRequest();
+			xmlHttp.open("GET", theUrl, false);
+			xmlHttp.send(null);
+			return xmlHttp.responseText;
+		}
+
+		function file_exists(url)
+		{
+			var http = new XMLHttpRequest();
+			http.open('HEAD', url, false);
+			http.send();
+			return http.status != 404;
+		}
+
+		function render(f)
+		{
+			var centre_map = f == -1;
+			if(centre_map) f = 0;
+			var filename = "tl_frames/i" + f + "_e.jpg";
+			var image = document.getElementById("tl_frame");
+			var image_path = "http://37.139.30.37/" + filename;
+			if(!file_exists(image_path)) {
+				console.log("Frame does not exist. f=" + f);
+				if(timer_id != -1) {
+					self.clearInterval(timer_id);
+					document.getElementById("pause-button").innerText = "Play";
+					timer_id = -1;
+				}
+				return;
+			}
+			frame = f
+			image.setAttribute("src", image_path);
+			
+			var gps_data = JSON.parse(httpGet("http://37.139.30.37/get_image_gps.php?frame=" + filename));
+			var lat = gps_data.lat;
+			var lon = gps_data.lon;
+			var alti = gps_data.alt;
+			var track = gps_data.track;
+			var spd = gps_data.speed;
+			
+			var current_pos = new google.maps.LatLng(lat, lon);
+			marker.setPosition(current_pos);
+			marker.setIcon(new google.maps.Marker({  
+					path: google.maps.SymbolPath.FORWARD_CLOSED_ARROW,
+					fillOpacity: 1,
+				strokeWeight: 2,
+				strokeColor: "rgb(100, 100, 20)",
+					scale: 5,
+				fillColor: "rgb(50, 190, 220)",
+				rotation: track
+				}));
+			document.getElementById("lat").innerText = lat;
+			document.getElementById("lon").innerText = lon;
+			speed = 0;
+			switch(s_unit)
+			{
+			case 0:
+				speed = spd * 0.44704;
+				break;
+			case 1:
+				speed = spd;
+				break;
+			case 2:
+				speed = spd * 1.60934;
+				break;
+			}
+			document.getElementById("speed").innerText = speed.toFixed(3);
+			document.getElementById("track").innerText = track;
+			document.getElementById("c-dir").innerText = get_compass_heading(track);
+			alt = 0;
+			switch(a_unit)
+			{
+			case 0:
+				alt = alti;
+				break;
+			case 1:
+				alt = alti * 3.2808399;
+				break;
+			}
+			document.getElementById("alti").innerText = alt.toFixed(3);
+			document.getElementById("time").innerText = gps_data.time;
+			document.getElementById("date").innerText = gps_data.date;
+			document.getElementById("frame_no").innerText = f;
+			
+			if(!centre_map) centre_map = document.getElementById("map-follow").checked;
+			if(centre_map) {
+				map.setCenter(current_pos);
+			}
+		}
+
+		function get_compass_heading(track)
+		{
+			if(track < 22.5) return "N";
+			if(track < 67.5) return "NE";
+			if(track < 112.5) return "E";
+			if(track < 157.5) return "SE";
+			if(track < 202.5) return "S";
+			if(track < 247.5) return "SW";
+			if(track < 292.5) return "W";
+			if(track < 337.5) return "NW";
+			return "N";
+		}
+
+		function change_speed_unit()
+		{
+			s_unit++;
+			if(s_unit == 3) s_unit = 0;
+			s_unit_t = "";
+			switch(s_unit)
+			{
+			case 0:
+				s_unit_t = "ms-1";
+				break;
+			case 1:
+				s_unit_t = "Kph";
+				break;
+			case 2:
+				s_unit_t = "mph";
+				break;
+			}
+			document.getElementById("s-unit").innerText = s_unit_t;
+			render(frame);
+		}
+
+		function change_alt_unit()
+		{
+			a_unit++;
+			if(a_unit == 2) a_unit = 0;
+			a_unit_t = "";
+			switch(a_unit)
+			{
+			case 0:
+				a_unit_t = "m";
+				break;
+			case 1:
+				a_unit_t = "ft";
+				break;
+			}
+			document.getElementById("a-unit").innerText = a_unit_t;
+			render(frame);
+		}
+		
+		function toggle_timer() {
+			if(timer_id == -1) {
+				timer_id = self.setInterval(
+					function() {
+						var frames = document.getElementById("frame-skip-val").value;
+						skip_frames(frames);
+					}, 500);
+				document.getElementById("pause-button").innerText = "Pause";
+				console.log(timer_id);
+			} else {
+				self.clearInterval(timer_id);
+				document.getElementById("pause-button").innerText = "Play";
+				timer_id = -1;
+			}
+		}
+		
+		function skip_frames(n_frames) {
+			var t_frame = frame + parseInt(n_frames);
+			if(t_frame < 0) t_frame = 0;
+			render(t_frame);
+		}
+		
+		function handle_skip(e) {
+			if(timer_id == -1) {
+				var frames = document.getElementById("frame-skip-val").value;
+				var e = e || window.event;
+				var target = e.target || e.srcElement;
+				if(target.id == "prev-button") frames = -frames;
+				skip_frames(frames);
+			}
+		}
+
+		function reg_events() {
+			var pause_button = document.getElementById("pause-button");
+			if(pause_button.addEventListener) {
+				pause_button.addEventListener("click", toggle_timer);
+			} else {
+				pause_button.attachEvent("click", toggle_timer);
+			}
+			
+			var next_button = document.getElementById("next-button");
+			if(next_button.addEventListener) {
+				next_button.addEventListener("click", handle_skip);
+			} else {
+				next_button.attachEvent("click", handle_skip);
+			}
+			
+			var prev_button = document.getElementById("prev-button");
+			if(prev_button.addEventListener) {
+				prev_button.addEventListener("click", handle_skip);
+			} else {
+				prev_button.attachEvent("click", handle_skip);
+			}
+		}
+
+		google.maps.event.addDomListener(window, 'load', initialize);
+		if(window.addEventListener){
+			window.addEventListener("load", reg_events, false);
+		} else if(window.attachEvent){
+			window.attachEvent("onload", reg_events);
+		} else{
+			document.addEventListener("load", reg_events, false);
+		}
+    </script>
+  </head>
+  <body>
+    <img id="tl_frame" src="" exif="true" />
+	<br />
+	<div id="map-canvas"></div>
+	<div id="text-data">
+		<p>
+			Latitude: <span id="lat"></span>&deg;<br />
+			Longitude: <span id="lon"></span>&deg;<br />
+			Speed: <span id="speed"></span> <a href="#" onClick="change_speed_unit()"><span id="s-unit">ms-1</span></a><br />
+			Heading: <span id="track"></span>&deg; (<span id="c-dir"> </span>)<br />
+			Altitude: <span id="alti"></span> <a href="#" onClick="change_alt_unit()"><span id="a-unit">m</span></a><br />
+			Time: <span id="time"></span><br />
+			Date: <span id="date"></span><br />
+			Frame: <span id="frame_no"></span>
+		</p>
+	</div>
+	<div id="controls">
+		<button id="prev-button">Prev.</button>
+		<button id="pause-button">Play</button>
+		<button id="next-button">Next</button>
+		<br />
+		Skip <input type="text" size="3" id="frame-skip-val" value="1"> frames
+		<br />
+		<input type="checkbox" id="map-follow" name="map-follow" checked="checked">Centre map on marker<br />
+	</div>
+  </body>
+</html>
