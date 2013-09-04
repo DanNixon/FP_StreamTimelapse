@@ -22,13 +22,15 @@
     <script>
 		var map;
 		var marker;
-		var line;
+		var gps_path;
+		var points;
 
 		var s_unit = 0;
 		var a_unit = 0;
 		var frame = 0;
 		
 		var timer_id = -1;
+		var max_frame = 0;
 
 		function initialize() {
 		  var mapOptions = {
@@ -39,26 +41,20 @@
 
 		  map = new google.maps.Map(document.getElementById('map-canvas'), mapOptions);
 
-		  //var points = new Array();
-		  //for(var i = 0; i < gps_data.length; i++) {
-			//var lat = gps_data[i][1];
-			//var lon = gps_data[i][2];
-			//var position = new google.maps.LatLng(lat, lon);
-			//points.push(position);
-		  //}
+		  points = new Array();
 		  
-		  //line = new google.maps.Polyline({
-			//path: points,
-			//strokeColor: '#FF0000',
-			//strokeOpacity: 1.0,
-			//strokeWeight: 2
-		  //});
+		  gps_path = new google.maps.Polyline({
+			path: points,
+			strokeColor: '#FF0000',
+			strokeOpacity: 1.0,
+			strokeWeight: 2
+		  });
 
-		  //gps_path.setMap(map);
+		  gps_path.setMap(map);
 		  
 		  map = new google.maps.Map(document.getElementById('map-canvas'), mapOptions);
 		  marker = new google.maps.Marker({ map: map });
-		  render(-1);
+		  render(-1, true);
 		}
 
 		function httpGet(theUrl)
@@ -78,7 +74,7 @@
 			return http.status != 404;
 		}
 
-		function render(f)
+		function render(f, add_path_point)
 		{
 			var centre_map = f == -1;
 			if(centre_map) f = 0;
@@ -105,15 +101,24 @@
 			var spd = gps_data.speed;
 			
 			var current_pos = new google.maps.LatLng(lat, lon);
+			
+			if(add_path_point && (frame > max_frame)) {
+				max_frame = frame;
+				points.push(current_pos);
+				console.log(points);
+				gps_path.setPath(points);
+				gps_path.setMap(map);
+			}
+			
 			marker.setPosition(current_pos);
 			marker.setIcon(new google.maps.Marker({  
 					path: google.maps.SymbolPath.FORWARD_CLOSED_ARROW,
 					fillOpacity: 1,
-				strokeWeight: 2,
-				strokeColor: "rgb(100, 100, 20)",
+					strokeWeight: 2,
+					strokeColor: "rgb(100, 100, 20)",
 					scale: 5,
-				fillColor: "rgb(50, 190, 220)",
-				rotation: track
+					fillColor: "rgb(50, 190, 220)",
+					rotation: track
 				}));
 			document.getElementById("lat").innerText = lat;
 			document.getElementById("lon").innerText = lon;
@@ -185,7 +190,7 @@
 				break;
 			}
 			document.getElementById("s-unit").innerText = s_unit_t;
-			render(frame);
+			render(frame, false);
 		}
 
 		function change_alt_unit()
@@ -203,7 +208,7 @@
 				break;
 			}
 			document.getElementById("a-unit").innerText = a_unit_t;
-			render(frame);
+			render(frame, false);
 		}
 		
 		function toggle_timer() {
@@ -211,7 +216,7 @@
 				timer_id = self.setInterval(
 					function() {
 						var frames = document.getElementById("frame-skip-val").value;
-						skip_frames(frames);
+						skip_frames(frames, true);
 					}, 500);
 				document.getElementById("pause-button").innerText = "Pause";
 				console.log(timer_id);
@@ -222,10 +227,10 @@
 			}
 		}
 		
-		function skip_frames(n_frames) {
+		function skip_frames(n_frames, add_path_point) {
 			var t_frame = frame + parseInt(n_frames);
 			if(t_frame < 0) t_frame = 0;
-			render(t_frame);
+			render(t_frame, add_path_point);
 		}
 		
 		function handle_skip(e) {
@@ -233,8 +238,11 @@
 				var frames = document.getElementById("frame-skip-val").value;
 				var e = e || window.event;
 				var target = e.target || e.srcElement;
-				if(target.id == "prev-button") frames = -frames;
-				skip_frames(frames);
+				if(target.id == "prev-button") {
+					skip_frames(-frames, false);
+				} else {
+					skip_frames(frames, true);
+				}
 			}
 		}
 
@@ -258,6 +266,21 @@
 				prev_button.addEventListener("click", handle_skip);
 			} else {
 				prev_button.attachEvent("click", handle_skip);
+			}
+			
+			var prev_button = document.getElementById("frame-skip-val");
+			if(prev_button.addEventListener) {
+				prev_button.addEventListener("change", function() {
+						points = new Array();
+						gps_path.setPath(points);
+						gps_path.setMap(map);
+					});
+			} else {
+				prev_button.attachEvent("change", function() {
+						points = new Array();
+						gps_path.setPath(points);
+						gps_path.setMap(map);
+					});
 			}
 		}
 

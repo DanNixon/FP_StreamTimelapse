@@ -15,8 +15,10 @@ function get_exif($frame_url) {
 	$track = rational_to_decimal($gps['GPSTrack']);
 	$alt = rational_to_decimal($gps['GPSAltitude']);
 	$speed = rational_to_decimal($gps['GPSSpeed']);
+	$time = timestamp_to_string($gps['GPSTimeStamp']);
+	$date = datestamp_to_string($gps['GPSDateStamp']);
 
-	$json_string = sprintf('{"lat":%F,"lon":%F,"alt":%F,"track":%F,"speed":%F}', $lat, $lon, $alt, $track, $speed);
+	$json_string = sprintf('{"lat":%F,"lon":%F,"alt":%F,"track":%F,"speed":%F,"time":"%s","date":"%s"}', $lat, $lon, $alt, $track, $speed, $time, $date);
 	echo($json_string);
 }
 
@@ -35,6 +37,22 @@ function dms_to_decimal($dms, $ref) {
 	if(in_array($ref, $neg_refs)) {
 		return -$result;
 	}
+	return $result;
+}
+
+function timestamp_to_string($timestamp) {
+	$hour = rational_to_decimal($timestamp[0]);
+	$min = rational_to_decimal($timestamp[1]);
+	$sec = rational_to_decimal($timestamp[2]);
+	$result = sprintf("%'02d:%'02d:%'02d", $hour, $min, $sec);
+	return $result;
+}
+
+function datestamp_to_string($datestamp) {
+	$year = substr($datestamp, 0, 4);
+	$month = substr($datestamp, 4, 2);
+	$day = substr($datestamp, 6, 2);
+	$result = sprintf("%'02d/%'02d/%'04d", $day, $month, $year);
 	return $result;
 }
 ?>
