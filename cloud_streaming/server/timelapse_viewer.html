@@ -15,7 +15,7 @@
 			width: 200px;
 		}
 		button {
-			width: 50px;
+			width: 80px;
 		}
     </style>
     <script src="https://maps.googleapis.com/maps/api/js?v=3.exp&sensor=false"></script>
@@ -49,11 +49,11 @@
 			strokeOpacity: 1.0,
 			strokeWeight: 2
 		  });
-
-		  gps_path.setMap(map);
 		  
 		  map = new google.maps.Map(document.getElementById('map-canvas'), mapOptions);
 		  marker = new google.maps.Marker({ map: map });
+		  gps_path.setMap(map);
+		  
 		  render(-1, true);
 		}
 
@@ -105,9 +105,7 @@
 			if(add_path_point && (frame > max_frame)) {
 				max_frame = frame;
 				points.push(current_pos);
-				console.log(points);
 				gps_path.setPath(points);
-				gps_path.setMap(map);
 			}
 			
 			marker.setPosition(current_pos);
@@ -212,17 +210,19 @@
 		}
 		
 		function toggle_timer() {
+			var delay = document.getElementById("time-delay-val");
 			if(timer_id == -1) {
 				timer_id = self.setInterval(
 					function() {
 						var frames = document.getElementById("frame-skip-val").value;
 						skip_frames(frames, true);
-					}, 500);
+					}, delay.value);
 				document.getElementById("pause-button").innerText = "Pause";
-				console.log(timer_id);
+				delay.disabled = true;
 			} else {
 				self.clearInterval(timer_id);
 				document.getElementById("pause-button").innerText = "Play";
+				delay.disabled = false;
 				timer_id = -1;
 			}
 		}
@@ -243,6 +243,20 @@
 				} else {
 					skip_frames(frames, true);
 				}
+			}
+		}
+		
+		function clear_path() {
+			points = new Array();
+			gps_path.setPath(points);
+		}
+		
+		function toggle_path() {
+			var show_path = document.getElementById("show-path").checked;
+			if(show_path) {
+				gps_path.setMap(map);
+			} else {
+				gps_path.setMap(null);
 			}
 		}
 
@@ -268,28 +282,34 @@
 				prev_button.attachEvent("click", handle_skip);
 			}
 			
-			var prev_button = document.getElementById("frame-skip-val");
-			if(prev_button.addEventListener) {
-				prev_button.addEventListener("change", function() {
-						points = new Array();
-						gps_path.setPath(points);
-						gps_path.setMap(map);
-					});
+			var frame_rate_tb = document.getElementById("frame-skip-val");
+			if(frame_rate_tb.addEventListener) {
+				frame_rate_tb.addEventListener("change", clear_path);
 			} else {
-				prev_button.attachEvent("change", function() {
-						points = new Array();
-						gps_path.setPath(points);
-						gps_path.setMap(map);
-					});
+				frame_rate_tb.attachEvent("change", clear_path);
+			}
+			
+			var clear_path_b = document.getElementById("clear-path-b");
+			if(clear_path_b.addEventListener) {
+				clear_path_b.addEventListener("click", clear_path);
+			} else {
+				clear_path_b.attachEvent("click", clear_path);
+			}
+			
+			var show_path_c = document.getElementById("show-path");
+			if(show_path_c.addEventListener) {
+				show_path_c.addEventListener("change", toggle_path);
+			} else {
+				show_path_c.attachEvent("change", toggle_path);
 			}
 		}
 
 		google.maps.event.addDomListener(window, 'load', initialize);
-		if(window.addEventListener){
+		if(window.addEventListener) {
 			window.addEventListener("load", reg_events, false);
-		} else if(window.attachEvent){
+		} else if(window.attachEvent) {
 			window.attachEvent("onload", reg_events);
-		} else{
+		} else {
 			document.addEventListener("load", reg_events, false);
 		}
     </script>
@@ -315,9 +335,12 @@
 		<button id="pause-button">Play</button>
 		<button id="next-button">Next</button>
 		<br />
-		Skip <input type="text" size="3" id="frame-skip-val" value="1"> frames
+		Frame Skip: <input type="text" size="3" id="frame-skip-val" value="1"><br />
+		Time Delay: <input type="text" size="3" id="time-delay-val" value="500">ms
 		<br />
 		<input type="checkbox" id="map-follow" name="map-follow" checked="checked">Centre map on marker<br />
+		<input type="checkbox" id="show-path" name="show-path" checked="checked">Show path<br />
+		<button id="clear-path-b">Clear Path</button>
 	</div>
   </body>
 </html>

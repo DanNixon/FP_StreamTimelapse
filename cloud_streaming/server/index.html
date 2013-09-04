@@ -11,6 +11,9 @@
 	  float: left;
 	  padding-left: 10px;
 	}
+	#links {
+		clear: both;
+	}
 </style>
 <script src="https://maps.googleapis.com/maps/api/js?v=3.exp&sensor=false"></script>
 <script>
@@ -18,6 +21,8 @@
 	var marker;
 	var s_unit = 0;
 	var a_unit = 0;
+	var gps_path;
+	var points;
 
 	function httpGet(theUrl)
 	{
@@ -31,6 +36,13 @@
 	function initialize() {
 	  var gps_data = JSON.parse(httpGet("http://37.139.30.37/gps.temp"));
 	  var current_pos = new google.maps.LatLng(gps_data.lat, gps_data.lon);
+	  points = new Array();
+	  gps_path = new google.maps.Polyline({
+		path: points,
+		strokeColor: '#FF0000',
+		strokeOpacity: 1.0,
+		strokeWeight: 2
+	  });
 	  var mapOptions = {
 	    zoom: 14,
 	    center: current_pos,
@@ -38,6 +50,7 @@
 	  };
 	  map = new google.maps.Map(document.getElementById('map-canvas'), mapOptions);
 	  marker = new google.maps.Marker({ map: map });
+	  gps_path.setMap(map);
 	  update_map();
 	}
 
@@ -64,6 +77,9 @@
 			fillColor: "rgb(50, 190, 220)",
 			rotation: gps_data.track
 	        }));
+		points.push(current_pos);
+		gps_path.setPath(points);
+		
 		document.getElementById("lat").innerText = gps_data.lat;
 		document.getElementById("lon").innerText = gps_data.lon;
 		speed = 0;	
@@ -150,6 +166,20 @@
 		}
 		document.getElementById("a-unit").innerText = a_unit_t;
 	}
+	
+	function toggle_path() {
+		var show_path = document.getElementById("show-path").checked;
+		if(show_path) {
+			gps_path.setMap(map);
+		} else {
+			gps_path.setMap(null);
+		}
+	}
+	
+	function clear_path() {
+		points = new Array();
+		gps_path.setPath(points);
+	}
 
 	google.maps.event.addDomListener(window, 'load', initialize);
 	self.setInterval(function(){update_map()}, 1000);
@@ -166,9 +196,18 @@ Longitude: <span id="lon"></span>&deg;<br />
 Speed: <span id="speed"></span> <a href="#" onClick="change_speed_unit()"><span id="s-unit">ms-1</span></a><br />
 Heading: <span id="track"></span>&deg; (<span id="c-dir"> </span>)<br />
 Altitude: <span id="alti"></span> <a href="#" onClick="change_alt_unit()"><span id="a-unit">m</span></a><br />
-Timestamp: <soan id="time"></span>
+Timestamp: <span id="time"></span>
 </p>
-<input type="checkbox" id="map-follow" checked="checked">Centre map on marker
+<input type="checkbox" id="map-follow" checked="checked">Centre map on marker<br />
+<input type="checkbox" id="show-path" checked="checked" onchange="toggle_path()">Show path<br />
+<button onclick="clear_path()">Clear Path</button>
+</div>
+<div id="links">
+<br />
+<p>
+<a href="timelapse_viewer.html">View Timelapse Frames</a></br />
+<a href="timelapse.php">Generate Timelapse Videos</a>
+</p>
 </div>
 </body>
 </html>
