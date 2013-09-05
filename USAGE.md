@@ -24,7 +24,7 @@ When the Pi boots it will automatically start timelapse recording, this can be s
 
 When the Pi is halted you can press the start/boot button to restart the Pi and being the capture, the Pi will behave as if it has just had the power connected, however the capture will start sooner as a GPS lock will already be established.
 
-The following table can be used to determine the stare of the Pi and capture based on the status lights. Note: assumes use of a the Adafruit Ultimate GPS (or module with equivalent FIX status), CM is the status LED on the camera module, FIX is the GPS fix indicator.
+The following table can be used to determine the state of the Pi and capture based on the status lights. Note: assumes use of a the Adafruit Ultimate GPS (or module with equivalent FIX status), **ACT**, **PWR**, **FDX** and **LNK** are the status LEDs on the Pi, **CM** is the status LED on the camera module, **FIX** is the GPS fix indicator, *n/a* incicates that the state of an LED is not relevant to the state indicated.
 <table>
 <tr>
 	<th>ACT</th><th>PWR</th><th>FDX</th><th>LNK</th><th>CM</th><th>FIX</th><th>State</th>
@@ -105,8 +105,8 @@ The following table can be used to determine the stare of the Pi and capture bas
 	<td>n/a</td>
 	<td>Solid</td>
 	<td>Solid</td>
-	<td>n/a</td>
-	<td>n/a</td>
+	<td><em>n/a</em></td>
+	<td><em>n/a</em></td>
 	<td>Off</td>
 	<td>GPS failure</td>
 </tr>
