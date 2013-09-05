@@ -35,6 +35,8 @@ To export a timelapse browse to ```timelapse.php``` you can then select to expor
 
 Browse to ```timelapse_viewer.html``` to view the saved timelapse frames.
 
+The ```uplaod_failed_images.sh``` script can be used to upload any images that have failed to automatically upload (due to network errors for example).
+
 Setup
 -----
 
