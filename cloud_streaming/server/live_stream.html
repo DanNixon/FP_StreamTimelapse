@@ -1,0 +1,203 @@
+<html>
+<head>
+<title>FP_StreamTimelaspe Cloud Test</title>
+<style type="text/css">
+	#map-canvas, #map_canvas {
+	  height: 300px;
+	  width: 300px;
+	  float: left;
+	}
+	#text-info {
+	  float: left;
+	  padding-left: 10px;
+	}
+</style>
+<script src="https://maps.googleapis.com/maps/api/js?v=3.exp&sensor=false"></script>
+<script>
+	var map;
+	var marker;
+	var s_unit = 0;
+	var a_unit = 0;
+	var gps_path;
+	var points;
+
+	function httpGet(theUrl)
+	{
+	    var xmlHttp = null;
+	    xmlHttp = new XMLHttpRequest();
+	    xmlHttp.open("GET", theUrl, false);
+	    xmlHttp.send(null);
+	    return xmlHttp.responseText;
+	}
+
+	function initialize() {
+	  var gps_data = JSON.parse(httpGet("http://37.139.30.37/gps.temp"));
+	  var current_pos = new google.maps.LatLng(gps_data.lat, gps_data.lon);
+	  points = new Array();
+	  gps_path = new google.maps.Polyline({
+		path: points,
+		strokeColor: '#FF0000',
+		strokeOpacity: 1.0,
+		strokeWeight: 2
+	  });
+	  var mapOptions = {
+	    zoom: 14,
+	    center: current_pos,
+	    mapTypeId: google.maps.MapTypeId.STREET
+	  };
+	  map = new google.maps.Map(document.getElementById('map-canvas'), mapOptions);
+	  marker = new google.maps.Marker({ map: map });
+	  gps_path.setMap(map);
+	  update_map();
+	}
+
+	function httpGet(theUrl)
+	{
+		var xmlHttp = null;
+		xmlHttp = new XMLHttpRequest();
+		xmlHttp.open("GET", theUrl, false);
+		xmlHttp.send(null);
+		return xmlHttp.responseText;
+	}
+
+	function update_map()
+	{
+		var gps_data = JSON.parse(httpGet("http://37.139.30.37/gps.temp"));
+		var current_pos = new google.maps.LatLng(gps_data.lat, gps_data.lon);
+		marker.setPosition(current_pos);
+		marker.setIcon(new google.maps.Marker({  
+	        	path: google.maps.SymbolPath.FORWARD_CLOSED_ARROW,
+	        	fillOpacity: 1,
+				strokeWeight: 2,
+				strokeColor: "rgb(100, 100, 20)",
+        		scale: 5,
+				fillColor: "rgb(50, 190, 220)",
+				rotation: gps_data.track
+	        }));
+		points.push(current_pos);
+		gps_path.setPath(points);
+		
+		document.getElementById("lat").innerText = gps_data.lat;
+		document.getElementById("lon").innerText = gps_data.lon;
+		speed = 0;	
+		switch(s_unit)
+		{
+		case 0:
+			speed = gps_data.speed;
+			break;
+		case 1:
+			speed = gps_data.speed * 3.6;
+			break;
+		case 2:
+			speed = gps_data.speed * 2.23693629;
+			break;
+		}
+		document.getElementById("speed").innerText = speed.toFixed(3);
+		document.getElementById("track").innerText = gps_data.track;
+		document.getElementById("c-dir").innerText = get_compass_heading(gps_data.track);
+		alt = 0;
+		switch(a_unit)
+		{
+		case 0:
+			alt = gps_data.alt;
+			break;
+		case 1:
+			alt = gps_data.alt * 3.2808399;
+			break;
+		}
+		document.getElementById("alti").innerText = alt.toFixed(3);
+		document.getElementById("time").innerText = gps_data.time;
+
+		var cm = document.getElementById("map-follow").checked;
+		if(cm) {
+			map.setCenter(current_pos);
+		}
+	}
+
+	function get_compass_heading(track)
+	{
+		if(track < 22.5) return "N";
+		if(track < 67.5) return "NE";
+		if(track < 112.5) return "E";
+		if(track < 157.5) return "SE";
+		if(track < 202.5) return "S";
+		if(track < 247.5) return "SW";
+		if(track < 292.5) return "W";
+		if(track < 337.5) return "NW";
+		return "N";
+	}
+
+	function change_speed_unit()
+	{
+		s_unit++;
+		if(s_unit == 3) s_unit = 0;
+		s_unit_t = "";
+		switch(s_unit)
+		{
+		case 0:
+			s_unit_t = "ms-1";
+			break;
+		case 1:
+			s_unit_t = "Kph";
+			break;
+		case 2:
+			s_unit_t = "mph";
+			break;
+		}
+		document.getElementById("s-unit").innerText = s_unit_t;
+	}
+
+	function change_alt_unit()
+	{
+		a_unit++;
+		if(a_unit == 2) a_unit = 0;
+		a_unit_t = "";
+		switch(a_unit)
+		{
+		case 0:
+			a_unit_t = "m";
+			break;
+		case 1:
+			a_unit_t = "ft";
+			break;
+		}
+		document.getElementById("a-unit").innerText = a_unit_t;
+	}
+	
+	function toggle_path() {
+		var show_path = document.getElementById("show-path").checked;
+		if(show_path) {
+			gps_path.setMap(map);
+		} else {
+			gps_path.setMap(null);
+		}
+	}
+	
+	function clear_path() {
+		points = new Array();
+		gps_path.setPath(points);
+	}
+
+	google.maps.event.addDomListener(window, 'load', initialize);
+	self.setInterval(function(){update_map()}, 1000);
+</script>
+</head>
+<body>
+<img src="http://37.139.30.37:8080/?action=stream" />
+<br />
+<div id="map-canvas"></div>
+<div id="text-info">
+<p>
+Latitude: <span id="lat"></span>&deg;<br />
+Longitude: <span id="lon"></span>&deg;<br />
+Speed: <span id="speed"></span> <a href="#" onClick="change_speed_unit()"><span id="s-unit">ms-1</span></a><br />
+Heading: <span id="track"></span>&deg; (<span id="c-dir"> </span>)<br />
+Altitude: <span id="alti"></span> <a href="#" onClick="change_alt_unit()"><span id="a-unit">m</span></a><br />
+Timestamp: <span id="time"></span>
+</p>
+<input type="checkbox" id="map-follow" checked="checked">Centre map on marker<br />
+<input type="checkbox" id="show-path" checked="checked" onchange="toggle_path()">Show path<br />
+<button onclick="clear_path()">Clear Path</button>
+</div>
+</body>
+</html>
