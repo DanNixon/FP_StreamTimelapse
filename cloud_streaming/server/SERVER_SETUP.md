@@ -16,6 +16,7 @@ Note
 -	```timelapse.php``` and ```tl_gen.sh``` are for the timelapse exporting page.
 -	```timelapse_viewer.html``` and ```get_image_gps.php``` are for the timelapse frame viewer.
 -	```upload_tl_frame.php``` is used by the timelapse export page and frame viewer.
+-	```gps_log_viewer.html``` is used to view data from ```gps.log``` (created by ```upload.php```)
 
 It may be necessary to change the ```upload_max_filesize``` and ```post_max_size``` parameters in ```php.ini``` to upload original images.
 
