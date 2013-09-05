@@ -38,6 +38,8 @@ $(document).ready(function() {
 </script>
     <script src="https://maps.googleapis.com/maps/api/js?v=3.exp&sensor=false"></script>
     <script>
+		var timelapse_folder = "tl_frames";
+
 		var map;
 		var marker;
 		var gps_path;
@@ -96,7 +98,7 @@ $(document).ready(function() {
 		{
 			var centre_map = f == -1;
 			if(centre_map) f = 0;
-			var filename = "tl_frames/i" + f + "_e.jpg";
+			var filename = timelapse_folder + "/i" + f + "_e.jpg";
 			var image = document.getElementById("tl_frame");
 			var image_path = "http://37.139.30.37/" + filename;
 			if(!file_exists(image_path)) {
