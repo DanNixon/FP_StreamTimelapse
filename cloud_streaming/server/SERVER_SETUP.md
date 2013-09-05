@@ -12,7 +12,7 @@ Setup streaming server:
 Note
 ----
 
--	```mjps.sh```, ```process_upload.sh```, ```index.html``` and ```upload.php``` are for MJPG streaming.
+-	```mjps.sh```, ```process_upload.sh```, ```live_stream.html``` and ```upload.php``` are for MJPG streaming.
 -	```timelapse.php``` and ```tl_gen.sh``` are for the timelapse exporting page.
 -	```timelapse_viewer.html``` and ```get_image_gps.php``` are for the timelapse frame viewer.
 -	```upload_tl_frame.php``` is used by the timelapse export page and frame viewer.
