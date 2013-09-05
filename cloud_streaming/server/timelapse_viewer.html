@@ -17,7 +17,25 @@
 		button {
 			width: 80px;
 		}
+		#tl_frame {
+			max-width: 100%;
+			max-height: 100%;
+			display: block;
+			margin: auto;
+		}
     </style>
+<script src="http://code.jquery.com/jquery-latest.js"></script>
+<script type="text/javascript" language="JavaScript">
+function set_body_height()
+{
+    var wh = $(window).height();
+    $('body').attr('style', 'height:' + wh + 'px;');
+}
+$(document).ready(function() {
+    set_body_height();
+    $(window).bind('resize', function() { set_body_height(); });
+});
+</script>
     <script src="https://maps.googleapis.com/maps/api/js?v=3.exp&sensor=false"></script>
     <script>
 		var map;
@@ -127,10 +145,10 @@
 				speed = spd * 0.44704;
 				break;
 			case 1:
-				speed = spd;
+				speed = spd * 1.60934;
 				break;
 			case 2:
-				speed = spd * 1.60934;
+				speed = spd;
 				break;
 			}
 			document.getElementById("speed").innerText = speed.toFixed(3);
@@ -315,7 +333,7 @@
     </script>
   </head>
   <body>
-    <img id="tl_frame" src="" exif="true" />
+    <img id="tl_frame" src="" />
 	<br />
 	<div id="map-canvas"></div>
 	<div id="text-data">
