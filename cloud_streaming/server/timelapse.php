@@ -32,7 +32,6 @@ if(isset($_GET['tl'])) {
 }
 ?>
 <br />
-<p><a href="/tl_frames">View All Timelapse Frames</a></p>
-<p><a href="/tl_exports">View All Timelapse Videos</a></p>
+<p><a href="/tl_exports">View Exported Timelapse  Videos</a></p>
 </body>
 </html>
