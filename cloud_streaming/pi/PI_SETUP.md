@@ -13,3 +13,4 @@ Setup the image uploader on the Pi
 	-	```echo "Removing queued streaming frames"```
 	-	```rm frame*.jpg```
 4.	Append the following to the "starting capture" ```screen``` command in ```start_timelapse.sh```: ``` "./upload_frame.sh %s"```
+5.	In ```imageWatcher.py``` change the value of ```use_gps``` to match your use of GPS: ```False``` if GPS is not used, ```True``` if GPS is used
