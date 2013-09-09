@@ -173,7 +173,7 @@ $(document).ready(function() {
 			
 			if(!centre_map) centre_map = document.getElementById("map-follow").checked;
 			if(centre_map) {
-				map.setCenter(current_pos);
+				map.panTo(current_pos);
 			}
 		}
 
@@ -325,6 +325,7 @@ $(document).ready(function() {
 		}
 
 		google.maps.event.addDomListener(window, 'load', initialize);
+		
 		if(window.addEventListener) {
 			window.addEventListener("load", reg_events, false);
 		} else if(window.attachEvent) {
