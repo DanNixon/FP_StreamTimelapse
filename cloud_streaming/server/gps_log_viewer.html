@@ -15,7 +15,7 @@
 			width: 100%;
 		}
 		#controls {
-			width: 280px;
+			width: 200px;
 			position: absolute;
 			top: 8px;
 			left: 80px;
@@ -73,11 +73,15 @@
 				position: point_pos,
 				map: map,
 				title: "Log Start",
+				pointID: 0,
 				icon: {
 					path: google.maps.SymbolPath.CIRCLE,
 					strokeColor: "green",
 					scale: 4
 				}
+			});
+			google.maps.event.addListener(m, "mouseover", function() {
+				set_info_position(this.pointID);
 			});
 			markers.push(m);
 
@@ -105,14 +109,7 @@
 				});
 				
 				google.maps.event.addListener(path_n, "mouseover", function() {
-					document.getElementById("lat-d").innerText = gps_points[this.pointID][0]
-					document.getElementById("lon-d").innerText = gps_points[this.pointID][1]
-					document.getElementById("track-d").innerText = gps_points[this.pointID][2]
-					document.getElementById("speed-d").innerText = gps_points[this.pointID][3]
-					document.getElementById("alt-d").innerText = gps_points[this.pointID][4]
-					document.getElementById("time-d").innerText = gps_points[this.pointID][5]
-					info_marker.setPosition(new google.maps.LatLng(gps_points[this.pointID][0], gps_points[this.pointID][1]));
-					info_marker.setMap(map);
+					set_info_position(this.pointID);
 				});
 				
 				path_n.setMap(map);
@@ -140,13 +137,32 @@
 				position: point_pos,
 				map: map,
 				title: "Log End",
+				pointID: (gps_points.length - 2),
 				icon: {
 					path: google.maps.SymbolPath.CIRCLE,
 					strokeColor: "red",
 					scale: 4
 				}
 			});
+			google.maps.event.addListener(m, "mouseover", function() {
+				set_info_position(this.pointID);
+			});
 			markers.push(m);
+		}
+		
+		function set_info_position(index) {
+			var timestamp = new Date(gps_points[index][5]);
+			var lat = gps_points[index][0];
+			var lon = gps_points[index][1];
+			document.getElementById("lat-d").innerText = lat;
+			document.getElementById("lon-d").innerText = lon;
+			document.getElementById("track-d").innerText = gps_points[index][2];
+			document.getElementById("speed-d").innerText = gps_points[index][3];
+			document.getElementById("alt-d").innerText = gps_points[index][4];
+			document.getElementById("time-d").innerText = timestamp.toLocaleTimeString();
+			document.getElementById("date-d").innerText = timestamp.toLocaleDateString();
+			info_marker.setPosition(new google.maps.LatLng(lat, lon));
+			info_marker.setMap(map);
 		}
 		
 		function httpGet(theUrl)
@@ -221,15 +237,16 @@
   <body>
     <div id="map-canvas"></div>
     <div id="controls">
-		Resolution: <input type="text" size="3" id="l_res_set" value="50"><br />
-		GPS Log File: <input type="text" id="log_file_set" value="http://37.139.30.37/sample_gps.log">
+		File: <input type="text" id="log_file_set" value="http://37.139.30.37/sample_gps.log"><br />
+		Resolution: <input type="text" size="3" id="l_res_set" value="50">
 		<p>
 			Latitude: <span id="lat-d"></span><br />
 			Longitude: <span id="lon-d"></span><br />
 			Altitude: <span id="alt-d"></span><br />
 			Heading: <span id="track-d"></span><br />
 			Speed: <span id="speed-d"></span><br />
-			Timestamp: <span id="time-d"></span>
+			Time: <span id="time-d"></span><br />
+			Date: <span id="date-d"></span>
 		</p>
     </div>
   </body>
