@@ -138,9 +138,9 @@ $(document).ready(function() {
 					fillColor: "rgb(50, 190, 220)",
 					rotation: track
 				}));
-			document.getElementById("lat").innerText = lat;
-			document.getElementById("lon").innerText = lon;
-			speed = 0;
+			document.getElementById("lat").innerText = lat.toFixed(6);
+			document.getElementById("lon").innerText = lon.toFixed(6);
+			var speed = 0;
 			switch(s_unit)
 			{
 			case 0:
@@ -153,10 +153,10 @@ $(document).ready(function() {
 				speed = spd;
 				break;
 			}
-			document.getElementById("speed").innerText = speed.toFixed(3);
-			document.getElementById("track").innerText = track;
+			document.getElementById("speed").innerText = speed.toFixed(2);
+			document.getElementById("track").innerText = track.toFixed(2);
 			document.getElementById("c-dir").innerText = get_compass_heading(track);
-			alt = 0;
+			var alt = 0;
 			switch(a_unit)
 			{
 			case 0:
@@ -166,7 +166,7 @@ $(document).ready(function() {
 				alt = alti * 3.2808399;
 				break;
 			}
-			document.getElementById("alti").innerText = alt.toFixed(3);
+			document.getElementById("alti").innerText = alt.toFixed(2);
 			document.getElementById("time").innerText = gps_data.time;
 			document.getElementById("date").innerText = gps_data.date;
 			document.getElementById("frame_no").innerText = f;
@@ -248,7 +248,7 @@ $(document).ready(function() {
 		}
 		
 		function skip_frames(n_frames, add_path_point) {
-			var t_frame = frame + parseInt(n_frames);
+			var t_frame = parseInt(frame )+ parseInt(n_frames);
 			if(t_frame < 0) t_frame = 0;
 			render(t_frame, add_path_point);
 		}
@@ -322,6 +322,23 @@ $(document).ready(function() {
 			} else {
 				show_path_c.attachEvent("change", toggle_path);
 			}
+			
+			var show_path_c = document.getElementById("frame_jump");
+			if(show_path_c.addEventListener) {
+				show_path_c.addEventListener("change", function() {
+					var frn = document.getElementById("frame_jump").value;
+					render(frn, false);
+					clear_path();
+					document.getElementById("frame_jump").value = "";
+				});
+			} else {
+				show_path_c.attachEvent("change", function() {
+					var frn = document.getElementById("frame_jump").value;
+					render(frn, false);
+					clear_path();
+					document.getElementById("frame_jump").value = "";
+				});
+			}
 		}
 
 		google.maps.event.addDomListener(window, 'load', initialize);
@@ -356,6 +373,7 @@ $(document).ready(function() {
 		<button id="pause-button">Play</button>
 		<button id="next-button">Next</button>
 		<br />
+		Jump to frame: <input type="text" size="3" id="frame_jump" value=""><br />
 		Frame Skip: <input type="text" size="3" id="frame-skip-val" value="1"><br />
 		Time Delay: <input type="text" size="3" id="time-delay-val" value="500">ms
 		<br />

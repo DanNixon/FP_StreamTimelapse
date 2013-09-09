@@ -30,6 +30,10 @@
 		var gps_points;
 		var info_marker;
 		
+		var ii_last;
+		var s_unit = 0;
+		var a_unit = 0;
+		
 		function initialize() {
 			var default_pos = new google.maps.LatLng(53, -1);
 			var mapOptions = {
@@ -56,6 +60,11 @@
 		
 		function add_gps_log() {
 			var log_file = document.getElementById("log_file_set").value;
+			var lower_limit = parseInt(document.getElementById("l_limit").value);
+			var upper_limit = parseInt(document.getElementById("u_limit").value);
+			
+			console.log(lower_limit);
+			console.log(upper_limit);
 			
 			set_markers_map(null);
 			for(var p = 0; p < gps_path.length; p++) {
@@ -67,7 +76,7 @@
 			var raw_data = httpGet(log_file);
 			gps_points = parse_csv(raw_data, ",");
 			
-			var point_data = gps_points[0];
+			var point_data = gps_points[lower_limit];
 			var point_pos = new google.maps.LatLng(parseFloat(point_data[0]), parseFloat(point_data[1]));
 			var m = new google.maps.Marker({
 				position: point_pos,
@@ -87,9 +96,14 @@
 
 			var line_resolution = parseInt(document.getElementById("l_res_set").value);
 			
-			var p = 0;
+			var p = lower_limit;
 			var next_point_pos;
-			while(p < gps_points.length - (1 + line_resolution)) {
+			if(upper_limit != -1) {
+				var loop_lim = upper_limit - (1 + line_resolution);
+			} else {
+				var loop_lim = gps_points.length - (1 + line_resolution);
+			}
+			while(p < loop_lim) {
 				var p_pts = new Array();
 				
 				var point_data = gps_points[p];
@@ -118,7 +132,11 @@
 				p += line_resolution;
 			}
 			
-			var point_data = gps_points[gps_points.length - 2];
+			if(upper_limit != -1) {
+				var point_data = gps_points[upper_limit];
+			} else {
+				var point_data = gps_points[gps_points.length - 2];
+			}
 			var point_pos = new google.maps.LatLng(parseFloat(point_data[0]), parseFloat(point_data[1]));
 			
 			var p_pts = new Array();
@@ -152,17 +170,96 @@
 		
 		function set_info_position(index) {
 			var timestamp = new Date(gps_points[index][5]);
-			var lat = gps_points[index][0];
-			var lon = gps_points[index][1];
-			document.getElementById("lat-d").innerText = lat;
-			document.getElementById("lon-d").innerText = lon;
-			document.getElementById("track-d").innerText = gps_points[index][2];
-			document.getElementById("speed-d").innerText = gps_points[index][3];
-			document.getElementById("alt-d").innerText = gps_points[index][4];
+			var lat = parseFloat(gps_points[index][0]);
+			var lon = parseFloat(gps_points[index][1]);
+			var track = parseFloat(gps_points[index][2]);
+			document.getElementById("pid-d").innerText = index;
+			document.getElementById("lat-d").innerText = lat.toFixed(6);
+			document.getElementById("lon-d").innerText = lon.toFixed(6);
+			document.getElementById("track-d").innerText = track.toFixed(2);
+			var speed = 0;
+			switch(s_unit)
+			{
+			case 0:
+				speed = parseFloat(gps_points[index][3]);
+				break;
+			case 1:
+				speed = parseFloat(gps_points[index][3]) * 3.6;
+				break;
+			case 2:
+				speed = parseFloat(gps_points[index][3]) * 1.60934;
+				break;
+			}
+			document.getElementById("speed-d").innerText = speed.toFixed(2);
+			var alt = 0;
+			switch(a_unit)
+			{
+			case 0:
+				alt = parseFloat(gps_points[index][4]);
+				break;
+			case 1:
+				alt = parseFloat(gps_points[index][4]) * 3.2808399;
+				break;
+			}
+			document.getElementById("alt-d").innerText = alt.toFixed(2);
 			document.getElementById("time-d").innerText = timestamp.toLocaleTimeString();
 			document.getElementById("date-d").innerText = timestamp.toLocaleDateString();
+			document.getElementById("track-dir").innerText = "(" + get_compass_heading(track) + ")";
 			info_marker.setPosition(new google.maps.LatLng(lat, lon));
 			info_marker.setMap(map);
+			ii_last = index;
+		}
+		
+		function get_compass_heading(track)
+		{
+			if(track < 22.5) return "N";
+			if(track < 67.5) return "NE";
+			if(track < 112.5) return "E";
+			if(track < 157.5) return "SE";
+			if(track < 202.5) return "S";
+			if(track < 247.5) return "SW";
+			if(track < 292.5) return "W";
+			if(track < 337.5) return "NW";
+			return "N";
+		}
+		
+		function change_speed_unit()
+		{
+			s_unit++;
+			if(s_unit == 3) s_unit = 0;
+			s_unit_t = "";
+			switch(s_unit)
+			{
+			case 0:
+				s_unit_t = "ms-1";
+				break;
+			case 1:
+				s_unit_t = "Kph";
+				break;
+			case 2:
+				s_unit_t = "mph";
+				break;
+			}
+			document.getElementById("s-unit").innerText = s_unit_t;
+			set_info_position(ii_last);
+		}
+
+		function change_alt_unit()
+		{
+			a_unit++;
+			if(a_unit == 2) a_unit = 0;
+			a_unit_t = "";
+			switch(a_unit)
+			{
+			case 0:
+				a_unit_t = "m";
+				break;
+			case 1:
+				a_unit_t = "ft";
+				break;
+			}
+			document.getElementById("a-unit").innerText = a_unit_t;
+			set_info_position(ii_last);
 		}
 		
 		function httpGet(theUrl)
@@ -221,6 +318,34 @@
 			} else {
 				pause_button.attachEvent("blur", add_gps_log);
 			}
+			
+			var pause_button = document.getElementById("l_limit");
+			if(pause_button.addEventListener) {
+				pause_button.addEventListener("change", add_gps_log);
+			} else {
+				pause_button.attachEvent("change", add_gps_log);
+			}
+			
+			var pause_button = document.getElementById("u_limit");
+			if(pause_button.addEventListener) {
+				pause_button.addEventListener("change", add_gps_log);
+			} else {
+				pause_button.attachEvent("change", add_gps_log);
+			}
+			
+			var alt_unit = document.getElementById("a-unit");
+			if(alt_unit.addEventListener) {
+				alt_unit.addEventListener("click", change_alt_unit);
+			} else {
+				alt_unit.attachEvent("click", change_alt_unit);
+			}
+			
+			var speed_unit = document.getElementById("s-unit");
+			if(speed_unit.addEventListener) {
+				speed_unit.addEventListener("click", change_speed_unit);
+			} else {
+				speed_unit.attachEvent("click", change_speed_unit);
+			}
 		}
 
 		google.maps.event.addDomListener(window, 'load', initialize);
@@ -238,13 +363,16 @@
     <div id="map-canvas"></div>
     <div id="controls">
 		File: <input type="text" id="log_file_set" value="http://37.139.30.37/sample_gps.log"><br />
-		Resolution: <input type="text" size="3" id="l_res_set" value="50">
+		Resolution: <input type="text" size="3" id="l_res_set" value="50"><br />
+		Lower Limit: <input type="text" size="3" id="l_limit" value="0"><br />
+		Upper Limit: <input type="text" size="3" id="u_limit" value="-1">
 		<p>
-			Latitude: <span id="lat-d"></span><br />
-			Longitude: <span id="lon-d"></span><br />
-			Altitude: <span id="alt-d"></span><br />
-			Heading: <span id="track-d"></span><br />
-			Speed: <span id="speed-d"></span><br />
+			Point ID: <span id="pid-d"></span><br />
+			Latitude: <span id="lat-d"></span>&deg;<br />
+			Longitude: <span id="lon-d"></span>&deg;<br />
+			Altitude: <span id="alt-d"></span> <span id="a-unit">m</span><br />
+			Heading: <span id="track-d"></span>&deg; <span id="track-dir"></span><br />
+			Speed: <span id="speed-d"></span> <span id="s-unit">ms-1</span><br />
 			Time: <span id="time-d"></span><br />
 			Date: <span id="date-d"></span>
 		</p>
