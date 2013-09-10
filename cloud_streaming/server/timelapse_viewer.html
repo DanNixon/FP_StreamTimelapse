@@ -280,6 +280,12 @@ $(document).ready(function() {
 			}
 		}
 
+		function gen_tl_from_frame() {
+			var url = "";
+			//TODO
+			window.location.replace(url);
+		}
+
 		function reg_events() {
 			var pause_button = document.getElementById("pause-button");
 			if(pause_button.addEventListener) {
@@ -339,6 +345,13 @@ $(document).ready(function() {
 					document.getElementById("frame_jump").value = "";
 				});
 			}
+			
+			var show_path_c = document.getElementById("gen_from_here");
+			if(show_path_c.addEventListener) {
+				show_path_c.addEventListener("click", gen_tl_from_frame);
+			} else {
+				show_path_c.attachEvent("click", gen_tl_from_frame);
+			}
 		}
 
 		google.maps.event.addDomListener(window, 'load', initialize);
@@ -380,6 +393,7 @@ $(document).ready(function() {
 		<input type="checkbox" id="map-follow" name="map-follow" checked="checked">Centre map on marker<br />
 		<input type="checkbox" id="show-path" name="show-path" checked="checked">Show path<br />
 		<button id="clear-path-b">Clear Path</button>
+		<p id="gen_from_here">Generate video starting at this frame</p>
 	</div>
   </body>
 </html>

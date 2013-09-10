@@ -19,7 +19,7 @@ function check_file() {
 }
 
 function send_tl_request(tl_path) {
-	var url = "http://37.139.30.37/timelapse.php?";
+	var url = "http://37.139.30.37/generate_video.php?";
 	url += ("tl=" + tl_path);
 	url += ("&l_lim=" + document.getElementById("l-lim").value);
 	url += ("&u_lim=" + document.getElementById("u-lim").value);
@@ -64,8 +64,8 @@ if(window.addEventListener) {
 </head>
 <body>
 <p>
-	Lower frame limit: <input type="text" size="3" id="l-lim" value="0">
-	Upper frame limit: <input type="text" size="3" id="u-lim" value="1000">
+	Lower frame limit: <input type="text" size="3" id="l-lim" value="<?php if(isset($_GET['ll'])) { echo $_GET['ll']; } else { echo 0; }?>">
+	Upper frame limit: <input type="text" size="3" id="u-lim" value="<?php if(isset($_GET['ul'])) { echo $_GET['ul']; } else { if(isset($_GET['ll'])) { echo intval($_GET['ll']) + 200; } else { echo 200; }}?>">
 </p>
 <p id="gen_orig">Generate Orignal Timelapse</p>
 <p id="gen_equi">Generate Equi Timelapse</p>
