@@ -63,9 +63,6 @@
 			var lower_limit = parseInt(document.getElementById("l_limit").value);
 			var upper_limit = parseInt(document.getElementById("u_limit").value);
 			
-			console.log(lower_limit);
-			console.log(upper_limit);
-			
 			set_markers_map(null);
 			for(var p = 0; p < gps_path.length; p++) {
 				gps_path[p].setMap(null);

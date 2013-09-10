@@ -281,9 +281,9 @@ $(document).ready(function() {
 		}
 
 		function gen_tl_from_frame() {
-			var url = "";
-			//TODO
-			window.location.replace(url);
+			var url = "http://37.139.30.37/generate_video.php?ll=";
+			url += frame;
+			window.location.href = url;
 		}
 
 		function reg_events() {
