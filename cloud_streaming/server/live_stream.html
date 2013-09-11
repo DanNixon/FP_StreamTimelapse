@@ -14,6 +14,8 @@
 </style>
 <script src="https://maps.googleapis.com/maps/api/js?v=3.exp&sensor=false"></script>
 <script>
+	var host = "http://fp.dan-nixon.com/";
+	
 	var map;
 	var marker;
 	var s_unit = 0;
@@ -31,7 +33,7 @@
 	}
 
 	function initialize() {
-	  var gps_data = JSON.parse(httpGet("http://37.139.30.37/gps.temp"));
+	  var gps_data = JSON.parse(httpGet(host + "gps.temp"));
 	  var current_pos = new google.maps.LatLng(gps_data.lat, gps_data.lon);
 	  points = new Array();
 	  gps_path = new google.maps.Polyline({
@@ -62,7 +64,7 @@
 
 	function update_map()
 	{
-		var gps_data = JSON.parse(httpGet("http://37.139.30.37/gps.temp"));
+		var gps_data = JSON.parse(httpGet(host + "gps.temp"));
 		var current_pos = new google.maps.LatLng(gps_data.lat, gps_data.lon);
 		marker.setPosition(current_pos);
 		marker.setIcon(new google.maps.Marker({  
@@ -183,7 +185,7 @@
 </script>
 </head>
 <body>
-<img src="http://37.139.30.37:8080/?action=stream" />
+<img src="http://fp.dan-nixon.com:8080/?action=stream" />
 <br />
 <div id="map-canvas"></div>
 <div id="text-info">

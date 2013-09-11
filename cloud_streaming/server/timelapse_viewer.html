@@ -39,7 +39,8 @@ $(document).ready(function() {
     <script src="https://maps.googleapis.com/maps/api/js?v=3.exp&sensor=false"></script>
     <script>
 		var timelapse_folder = "tl_frames";
-
+		var host = "http://fp.dan-nixon.com/";
+		
 		var map;
 		var marker;
 		var gps_path;
@@ -100,7 +101,7 @@ $(document).ready(function() {
 			if(centre_map) f = 0;
 			var filename = timelapse_folder + "/i" + f + "_e.jpg";
 			var image = document.getElementById("tl_frame");
-			var image_path = "http://37.139.30.37/" + filename;
+			var image_path = host + filename;
 			if(!file_exists(image_path)) {
 				console.log("Frame does not exist. f=" + f);
 				if(timer_id != -1) {
@@ -113,7 +114,7 @@ $(document).ready(function() {
 			frame = f
 			image.setAttribute("src", image_path);
 			
-			var gps_data = JSON.parse(httpGet("http://37.139.30.37/get_image_gps.php?frame=" + filename));
+			var gps_data = JSON.parse(httpGet(host + "get_image_gps.php?frame=" + filename));
 			var lat = gps_data.lat;
 			var lon = gps_data.lon;
 			var alti = gps_data.alt;
@@ -281,7 +282,7 @@ $(document).ready(function() {
 		}
 
 		function gen_tl_from_frame() {
-			var url = "http://37.139.30.37/generate_video.php?ll=";
+			var url = host + "generate_video.php?ll=";
 			url += frame;
 			window.location.href = url;
 		}
