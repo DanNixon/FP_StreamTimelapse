@@ -87,6 +87,8 @@ Optional Stuff
 Notes
 -----
 
+You may wish to disable the camera LED when you have verified that the installation is working, this can be done by editing ```/boot/config.txt``` and adding the line ```disable_camera_led=1```.
+
 For both 5 and 6, options are passed to the ```raspistill``` command and control the image size and effects/filters.
 
 - -n = no preview
