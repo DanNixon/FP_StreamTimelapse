@@ -1,0 +1,399 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <title>Timelapse Viewer</title>
+    <style type="text/css">
+		#map-canvas, #map_canvas {
+			height: 300px;
+			width: 300px;
+			float: left;
+		}
+		#text-data {
+			padding-left: 10px;
+			float: left;
+			width: 200px;
+		}
+		button {
+			width: 80px;
+		}
+		#tl_frame {
+			max-width: 100%;
+			max-height: 100%;
+			display: block;
+			margin: auto;
+		}
+    </style>
+<script src="http://code.jquery.com/jquery-latest.js"></script>
+<script type="text/javascript" language="JavaScript">
+function set_body_height()
+{
+    var wh = $(window).height();
+    $('body').attr('style', 'height:' + wh + 'px;');
+}
+$(document).ready(function() {
+    set_body_height();
+    $(window).bind('resize', function() { set_body_height(); });
+});
+</script>
+    <script src="https://maps.googleapis.com/maps/api/js?v=3.exp&sensor=false"></script>
+    <script>
+		var timelapse_folder = "tl_frames";
+
+		var map;
+		var marker;
+		var gps_path;
+		var points;
+
+		var s_unit = 0;
+		var a_unit = 0;
+		var frame = 0;
+		
+		var timer_id = -1;
+		var max_frame = 0;
+
+		function initialize() {
+		  var mapOptions = {
+			zoom: 15,
+			center: new google.maps.LatLng(54, -1),
+			mapTypeId: google.maps.MapTypeId.ROAD
+		  };
+
+		  map = new google.maps.Map(document.getElementById('map-canvas'), mapOptions);
+
+		  points = new Array();
+		  
+		  gps_path = new google.maps.Polyline({
+			path: points,
+			strokeColor: '#FF0000',
+			strokeOpacity: 1.0,
+			strokeWeight: 2
+		  });
+		  
+		  map = new google.maps.Map(document.getElementById('map-canvas'), mapOptions);
+		  marker = new google.maps.Marker({ map: map });
+		  gps_path.setMap(map);
+		  
+		  render(-1, true);
+		}
+
+		function httpGet(theUrl)
+		{
+			var xmlHttp = null;
+			xmlHttp = new XMLHttpRequest();
+			xmlHttp.open("GET", theUrl, false);
+			xmlHttp.send(null);
+			return xmlHttp.responseText;
+		}
+
+		function file_exists(url)
+		{
+			var http = new XMLHttpRequest();
+			http.open('HEAD', url, false);
+			http.send();
+			return http.status != 404;
+		}
+
+		function render(f, add_path_point)
+		{
+			var centre_map = f == -1;
+			if(centre_map) f = 0;
+			var filename = timelapse_folder + "/i" + f + "_e.jpg";
+			var image = document.getElementById("tl_frame");
+			var image_path = "http://37.139.30.37/" + filename;
+			if(!file_exists(image_path)) {
+				console.log("Frame does not exist. f=" + f);
+				if(timer_id != -1) {
+					self.clearInterval(timer_id);
+					document.getElementById("pause-button").innerText = "Play";
+					timer_id = -1;
+				}
+				return;
+			}
+			frame = f
+			image.setAttribute("src", image_path);
+			
+			var gps_data = JSON.parse(httpGet("http://37.139.30.37/get_image_gps.php?frame=" + filename));
+			var lat = gps_data.lat;
+			var lon = gps_data.lon;
+			var alti = gps_data.alt;
+			var track = gps_data.track;
+			var spd = gps_data.speed;
+			
+			var current_pos = new google.maps.LatLng(lat, lon);
+			
+			if(add_path_point && (frame > max_frame)) {
+				max_frame = frame;
+				points.push(current_pos);
+				gps_path.setPath(points);
+			}
+			
+			marker.setPosition(current_pos);
+			marker.setIcon(new google.maps.Marker({  
+					path: google.maps.SymbolPath.FORWARD_CLOSED_ARROW,
+					fillOpacity: 1,
+					strokeWeight: 2,
+					strokeColor: "rgb(100, 100, 20)",
+					scale: 5,
+					fillColor: "rgb(50, 190, 220)",
+					rotation: track
+				}));
+			document.getElementById("lat").innerText = lat.toFixed(6);
+			document.getElementById("lon").innerText = lon.toFixed(6);
+			var speed = 0;
+			switch(s_unit)
+			{
+			case 0:
+				speed = spd * 0.44704;
+				break;
+			case 1:
+				speed = spd * 1.60934;
+				break;
+			case 2:
+				speed = spd;
+				break;
+			}
+			document.getElementById("speed").innerText = speed.toFixed(2);
+			document.getElementById("track").innerText = track.toFixed(2);
+			document.getElementById("c-dir").innerText = get_compass_heading(track);
+			var alt = 0;
+			switch(a_unit)
+			{
+			case 0:
+				alt = alti;
+				break;
+			case 1:
+				alt = alti * 3.2808399;
+				break;
+			}
+			document.getElementById("alti").innerText = alt.toFixed(2);
+			document.getElementById("time").innerText = gps_data.time;
+			document.getElementById("date").innerText = gps_data.date;
+			document.getElementById("frame_no").innerText = f;
+			
+			if(!centre_map) centre_map = document.getElementById("map-follow").checked;
+			if(centre_map) {
+				map.panTo(current_pos);
+			}
+		}
+
+		function get_compass_heading(track)
+		{
+			if(track < 22.5) return "N";
+			if(track < 67.5) return "NE";
+			if(track < 112.5) return "E";
+			if(track < 157.5) return "SE";
+			if(track < 202.5) return "S";
+			if(track < 247.5) return "SW";
+			if(track < 292.5) return "W";
+			if(track < 337.5) return "NW";
+			return "N";
+		}
+
+		function change_speed_unit()
+		{
+			s_unit++;
+			if(s_unit == 3) s_unit = 0;
+			s_unit_t = "";
+			switch(s_unit)
+			{
+			case 0:
+				s_unit_t = "ms-1";
+				break;
+			case 1:
+				s_unit_t = "Kph";
+				break;
+			case 2:
+				s_unit_t = "mph";
+				break;
+			}
+			document.getElementById("s-unit").innerText = s_unit_t;
+			render(frame, false);
+		}
+
+		function change_alt_unit()
+		{
+			a_unit++;
+			if(a_unit == 2) a_unit = 0;
+			a_unit_t = "";
+			switch(a_unit)
+			{
+			case 0:
+				a_unit_t = "m";
+				break;
+			case 1:
+				a_unit_t = "ft";
+				break;
+			}
+			document.getElementById("a-unit").innerText = a_unit_t;
+			render(frame, false);
+		}
+		
+		function toggle_timer() {
+			var delay = document.getElementById("time-delay-val");
+			if(timer_id == -1) {
+				timer_id = self.setInterval(
+					function() {
+						var frames = document.getElementById("frame-skip-val").value;
+						skip_frames(frames, true);
+					}, delay.value);
+				document.getElementById("pause-button").innerText = "Pause";
+				delay.disabled = true;
+			} else {
+				self.clearInterval(timer_id);
+				document.getElementById("pause-button").innerText = "Play";
+				delay.disabled = false;
+				timer_id = -1;
+			}
+		}
+		
+		function skip_frames(n_frames, add_path_point) {
+			var t_frame = parseInt(frame )+ parseInt(n_frames);
+			if(t_frame < 0) t_frame = 0;
+			render(t_frame, add_path_point);
+		}
+		
+		function handle_skip(e) {
+			if(timer_id == -1) {
+				var frames = document.getElementById("frame-skip-val").value;
+				var e = e || window.event;
+				var target = e.target || e.srcElement;
+				if(target.id == "prev-button") {
+					skip_frames(-frames, false);
+				} else {
+					skip_frames(frames, true);
+				}
+			}
+		}
+		
+		function clear_path() {
+			points = new Array();
+			gps_path.setPath(points);
+		}
+		
+		function toggle_path() {
+			var show_path = document.getElementById("show-path").checked;
+			if(show_path) {
+				gps_path.setMap(map);
+			} else {
+				gps_path.setMap(null);
+			}
+		}
+
+		function gen_tl_from_frame() {
+			var url = "http://37.139.30.37/generate_video.php?ll=";
+			url += frame;
+			window.location.href = url;
+		}
+
+		function reg_events() {
+			var pause_button = document.getElementById("pause-button");
+			if(pause_button.addEventListener) {
+				pause_button.addEventListener("click", toggle_timer);
+			} else {
+				pause_button.attachEvent("click", toggle_timer);
+			}
+			
+			var next_button = document.getElementById("next-button");
+			if(next_button.addEventListener) {
+				next_button.addEventListener("click", handle_skip);
+			} else {
+				next_button.attachEvent("click", handle_skip);
+			}
+			
+			var prev_button = document.getElementById("prev-button");
+			if(prev_button.addEventListener) {
+				prev_button.addEventListener("click", handle_skip);
+			} else {
+				prev_button.attachEvent("click", handle_skip);
+			}
+			
+			var frame_rate_tb = document.getElementById("frame-skip-val");
+			if(frame_rate_tb.addEventListener) {
+				frame_rate_tb.addEventListener("change", clear_path);
+			} else {
+				frame_rate_tb.attachEvent("change", clear_path);
+			}
+			
+			var clear_path_b = document.getElementById("clear-path-b");
+			if(clear_path_b.addEventListener) {
+				clear_path_b.addEventListener("click", clear_path);
+			} else {
+				clear_path_b.attachEvent("click", clear_path);
+			}
+			
+			var show_path_c = document.getElementById("show-path");
+			if(show_path_c.addEventListener) {
+				show_path_c.addEventListener("change", toggle_path);
+			} else {
+				show_path_c.attachEvent("change", toggle_path);
+			}
+			
+			var show_path_c = document.getElementById("frame_jump");
+			if(show_path_c.addEventListener) {
+				show_path_c.addEventListener("change", function() {
+					var frn = document.getElementById("frame_jump").value;
+					render(frn, false);
+					clear_path();
+					document.getElementById("frame_jump").value = "";
+				});
+			} else {
+				show_path_c.attachEvent("change", function() {
+					var frn = document.getElementById("frame_jump").value;
+					render(frn, false);
+					clear_path();
+					document.getElementById("frame_jump").value = "";
+				});
+			}
+			
+			var show_path_c = document.getElementById("gen_from_here");
+			if(show_path_c.addEventListener) {
+				show_path_c.addEventListener("click", gen_tl_from_frame);
+			} else {
+				show_path_c.attachEvent("click", gen_tl_from_frame);
+			}
+		}
+
+		google.maps.event.addDomListener(window, 'load', initialize);
+		
+		if(window.addEventListener) {
+			window.addEventListener("load", reg_events, false);
+		} else if(window.attachEvent) {
+			window.attachEvent("onload", reg_events);
+		} else {
+			document.addEventListener("load", reg_events, false);
+		}
+    </script>
+  </head>
+  <body>
+    <img id="tl_frame" src="" />
+	<br />
+	<div id="map-canvas"></div>
+	<div id="text-data">
+		<p>
+			Latitude: <span id="lat"></span>&deg;<br />
+			Longitude: <span id="lon"></span>&deg;<br />
+			Speed: <span id="speed"></span> <a href="#" onClick="change_speed_unit()"><span id="s-unit">ms-1</span></a><br />
+			Heading: <span id="track"></span>&deg; (<span id="c-dir"> </span>)<br />
+			Altitude: <span id="alti"></span> <a href="#" onClick="change_alt_unit()"><span id="a-unit">m</span></a><br />
+			Time: <span id="time"></span><br />
+			Date: <span id="date"></span><br />
+			Frame: <span id="frame_no"></span>
+		</p>
+	</div>
+	<div id="controls">
+		<button id="prev-button">Prev.</button>
+		<button id="pause-button">Play</button>
+		<button id="next-button">Next</button>
+		<br />
+		Jump to frame: <input type="text" size="3" id="frame_jump" value=""><br />
+		Frame Skip: <input type="text" size="3" id="frame-skip-val" value="1"><br />
+		Time Delay: <input type="text" size="3" id="time-delay-val" value="500">ms
+		<br />
+		<input type="checkbox" id="map-follow" name="map-follow" checked="checked">Centre map on marker<br />
+		<input type="checkbox" id="show-path" name="show-path" checked="checked">Show path<br />
+		<button id="clear-path-b">Clear Path</button>
+		<p id="gen_from_here">Generate video starting at this frame</p>
+	</div>
+  </body>
+</html>

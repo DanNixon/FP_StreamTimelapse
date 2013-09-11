@@ -12,4 +12,12 @@ Setup streaming server:
 Note
 ----
 
+-	```mjps.sh```, ```process_upload.sh```, ```live_stream.html``` and ```upload.php``` are for MJPG streaming.
+-	```timelapse.php``` and ```tl_gen.sh``` are for the timelapse exporting page.
+-	```timelapse_viewer.html``` and ```get_image_gps.php``` are for the timelapse frame viewer.
+-	```upload_tl_frame.php``` is used by the timelapse export page and frame viewer.
+-	```gps_log_viewer.html``` is used to view data from ```gps.log``` (created by ```upload.php```)
+
+It may be necessary to change the ```upload_max_filesize``` and ```post_max_size``` parameters in ```php.ini``` to upload original images.
+
 You may see lots of this error ```libdc1394 error: Failed to initialize libdc1394``` in Apache ```error.log``` (particularly on virtual server instances), it is to do with camera hardware communication and comes from OpenCV, you can ignore it.

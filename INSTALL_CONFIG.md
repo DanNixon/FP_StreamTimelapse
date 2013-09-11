@@ -49,8 +49,8 @@ Hardware Installation
 	-	Keep control socket as default
 11.	Configure hardware controls:
 	-	Solder a 2 pin .1" header onto the unpopulated P6 header on the Pi (between voltage regulator RG2 and HDMI port)
-	-	Connect a PTM switch between pin 1 of P6 (the pin closest to the edge of the board, with a square copper pad) and any ground (pin 2 of P6 is ground). This will reset the BCM2835, booting the Pi if it has been halted or the equivalent of hard rebooting the Pi.
-	-	Connect  PTM switch between pin 3 of the main GPIO header and ground. This pin is polled every second by ```gpio_halt.sh``` and runs ```stop_timelapse.sh``` and halts the Pi if it becomes low.
+	-	Connect a PTM switch between pin 1 of P6 (the pin closest to the edge of the board, with a square copper pad) and any ground (pin 2 of P6 is ground), this is the start/boot button (see USAGE).
+	-	Connect  PTM switch between pin 3 of the main GPIO header and ground, this is the stop button (see USAGE).
 
 Configure timelapse
 -------------------
