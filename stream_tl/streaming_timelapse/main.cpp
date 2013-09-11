@@ -19,8 +19,7 @@ using namespace std;
 using namespace cv;
 
 const char *rs_tl_args = "-n -w 2000 -h 2000 -awb sun -ex backlight -ev -2 -mm backlit --exif EXIF.MakerNote=BubbleScopeTimelapseFrame";
-const char *rs_strm_args = "-n -th 0:0:0 -w 400 -h 400 -awb sun -ex backlight -ev -4 -mm backlit";
-const int stream_delay = 500;
+const char *rs_strm_args = "-n -th 0:0:0 -w 400 -h 400 -awb sun -ex backlight -ev -4 -mm backlit -tl 500";
 const int min_tl_delay = 5000; //>500
 const int tl_cap_run_in = 80; //>50, delay between starting camera in stills mode and taking image
 const char *frame_location = "s_frame.jpg";
@@ -235,12 +234,9 @@ int main(int argc, char **argv)
         }
 
         //Start camera in timelapse mode to generate stream images
-        int f_delay = stream_delay;
-        if(f_delay < tl_cap_run_in) f_delay = tl_cap_run_in;
         char stream_capture_cmd[100];
+        sprintf(stream_capture_cmd, "raspistill -o %s -tl %d %s", frame_location,  (delay - tl_cap_run_in), rs_strm_args);
 
-        sprintf(stream_capture_cmd, "raspistill -o %s -t %d %s", frame_location,  (f_delay - tl_cap_run_in), rs_strm_args);
-        
         cout<<"Starting streaming capture"<<endl;
         system(stream_capture_cmd);
         cout<<"Streaming capture end"<<endl;
