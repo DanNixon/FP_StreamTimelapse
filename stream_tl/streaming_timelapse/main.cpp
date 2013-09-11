@@ -207,36 +207,14 @@ int main(int argc, char **argv)
             frame++;
         }
 
-        //Use multiple RaspStill commnds to capture streaming frames
+        //Start camera in timelapse mode to generate stream images
         int f_delay = stream_delay;
         if(f_delay < tl_cap_run_in) f_delay = tl_cap_run_in;
         char stream_capture_cmd[100];
-        sprintf(stream_capture_cmd, "raspistill -o %s -t %d %s", frame_location, f_delay, rs_strm_args);
 
+        sprintf(stream_capture_cmd, "raspistill -o %s -t %d %s", frame_location,  (f_delay - tl_cap_run_in), rs_strm_args);
         cout<<"Starting streaming capture"<<endl;
-        time_t timelapse_start;
-        time(&timelapse_start);
-        long elapsed_ms = 0;
-
-        do
-        {
-            //Stop if needed
-            if(!run)
-            {
-                //If stopping, wait for images to process
-                if(capture_now) pthread_join(proc_thread_id, NULL);
-                break;
-            }
-
-            system(stream_capture_cmd);
-
-            time_t c_time;
-            time(&c_time);
-            double elapsed_sec = difftime(c_time, timelapse_start);
-            elapsed_ms = (long) (elapsed_sec * 1000);
-        }
-        while (elapsed_ms < delay);
-
+        system(stream_capture_cmd);
         cout<<"Streaming capture end"<<endl;
 
         //Check if frame has reached capture limit
@@ -246,6 +224,13 @@ int main(int argc, char **argv)
             else run = 1;
         }
 
+        //Stop if needed
+        if(!run)
+        {
+            //If stopping, wait for images to process
+            if(capture_now) pthread_join(proc_thread_id, NULL);
+            break;
+        }
 
         //Deallocate resources for terminated processing threads
         if(capture_now) pthread_detach(proc_thread_id);

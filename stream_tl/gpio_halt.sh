@@ -17,6 +17,7 @@ do
 		echo "gpio_halt.sh: Got halt conditions"
 		cd /home/pi/stream_tl
 		./stop_timelapse.sh
+		sleep 30 ##This sleep time should be at least that of the timelapse period
 		sudo shutdown -h now
 		break
 	fi

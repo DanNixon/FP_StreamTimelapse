@@ -13,6 +13,7 @@ Requirements
 	-	Camera module adapted for variable focus (glue on lens screw removed)
 	-	"Large" SD card (timelapse capturing every minute should run for 7 days happily on a 32GB card)
 	-	Suitable GPS module compatible with gpsd and with fix indicator output (e.g. [Adafruit Ultimate GPS](http://www.adafruit.com/products/746))
+	-	Ensure you are using the latest version of ```raspistill```, the latest version is available on master branch of the [userland](https://github.com/raspberrypi/userland) repo.
 
 Software Installation
 ---------------------
