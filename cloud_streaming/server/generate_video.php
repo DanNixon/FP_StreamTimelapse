@@ -25,6 +25,7 @@ function send_tl_request(tl_path) {
 	url += ("tl=" + tl_path);
 	url += ("&l_lim=" + document.getElementById("l-lim").value);
 	url += ("&u_lim=" + document.getElementById("u-lim").value);
+	url += ("&width=" + document.getElementById("px-w").value);
 	console.log(url);
 	window.location.replace(url);
 }
@@ -66,15 +67,16 @@ if(window.addEventListener) {
 </head>
 <body>
 <p>
-	Lower frame limit: <input type="text" size="3" id="l-lim" value="<?php if(isset($_GET['ll'])) { echo $_GET['ll']; } else { echo 0; }?>">
-	Upper frame limit: <input type="text" size="3" id="u-lim" value="<?php if(isset($_GET['ul'])) { echo $_GET['ul']; } else { if(isset($_GET['ll'])) { echo intval($_GET['ll']) + 200; } else { echo 200; }}?>">
+	Lower frame limit: <input type="text" size="3" id="l-lim" value="<?php if(isset($_GET['ll'])) { echo $_GET['ll']; } else { echo 0; }?>"><br />
+	Upper frame limit: <input type="text" size="3" id="u-lim" value="<?php if(isset($_GET['ul'])) { echo $_GET['ul']; } else { if(isset($_GET['ll'])) { echo intval($_GET['ll']) + 200; } else { echo 200; }}?>"><br />
+	Output video width: <input type="text" size="3" id="px-w" value="2000">
 </p>
 <p id="gen_orig">Generate Orignal Timelapse</p>
 <p id="gen_equi">Generate Equi Timelapse</p>
 <?php
 if(isset($_GET['tl'])) {
 	$tl_filename = sprintf("tl_%d.mp4", time());
-	exec('/var/www/tl_gen.sh '.$_GET['l_lim'].' '.$_GET['u_lim'].' /var/www/tl_frames'.$_GET['tl'].' "/var/www/tl_exports/'.$tl_filename.'" > /dev/null &');
+	exec('/var/www/tl_gen.sh '.$_GET['l_lim'].' '.$_GET['u_lim'].' /var/www/tl_frames'.$_GET['tl'].' "/var/www/tl_exports/'.$tl_filename.'" '.$_GET['width'].' > /dev/null &');
 	echo("<p id='filename'>".$tl_filename."</p>");
 }
 ?>

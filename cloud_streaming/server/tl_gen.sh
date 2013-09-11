@@ -1,14 +1,9 @@
 #!/bin/bash
 
-##Usage tl_gen.sh [lower limit] [upper limit] [origin file pattern] [output filename]
+##Usage tl_gen.sh [lower limit] [upper limit] [origin file pattern] [output filename] [output width]
 
 ##-r FRAME RATE
 ##-crf QUALITY
-
-echo $1
-echo $2
-echo $3
-echo $4
 
 cd /var/www
 
@@ -21,7 +16,7 @@ do
         img_count=$((img_count+1))
 done
 
-ffmpeg -f image2 -r 10 -i "$4"_frames/frame%d.jpg -vcodec libx264 -preset ultrafast -crf 25 "$4"_temp.mp4
+ffmpeg -f image2 -r 10 -i "$4"_frames/frame%d.jpg -vcodec libx264 -preset ultrafast -crf 25 -vf scale=$5:-1 "$4"_temp.mp4
 
 mv "$4"_temp.mp4 "$4"
 
