@@ -29,15 +29,17 @@ In addition to the general requirements:
 Usage
 -----
 
-Browse to the root of the server to see the sample streaming page.
+The root of the server contains a menu showing the various demos.
 
-To export a timelapse browse to ```generate_video.php``` you can then select to export either a timelaspe using the original frames or equirectangular images, once conversion has completed you will be able to download the MP4 video.
+The "View Live Stream" page shows the current equi stream from the Pi as well as current GPS position data.
 
-Browse to ```timelapse_viewer.html``` to view the saved timelapse frames.
+"Web Timelapse Viewer" allows viewing timelapse frames stored on the server and GPS position data associated with them.
 
-Browse to ```gps_log_viewer.html``` to view stored GPS data.
+"Export Timelapse Videos" allows you to export either a timelaspe using the original frames or equirectangular images, once conversion has completed you will be able to download the MP4 video.
 
-The ```uplaod_failed_images.sh``` script can be used to upload any images that have failed to automatically upload (due to network errors for example).
+"View GPS Log on Map" is used to view stored GPS data displayed using a Polyline which shows further data (altitude, heading, speed, time) when the mouse is moved over the line.
+
+On the Pi, the ```upload_failed_images.sh``` script can be used to upload any images that have failed to automatically upload (due to network errors for example), if a timelapse video generation seems to have failed (video is shorter then expected) there is a good chance that this will fix the problem.
 
 Setup
 -----

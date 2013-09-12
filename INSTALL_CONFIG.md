@@ -49,13 +49,13 @@ Hardware Installation
 11.	Configure hardware controls:
 	-	Solder a 2 pin .1" header onto the unpopulated P6 header on the Pi (between voltage regulator RG2 and HDMI port)
 	-	Connect a PTM switch between pin 1 of P6 (the pin closest to the edge of the board, with a square copper pad) and any ground (pin 2 of P6 is ground), this is the start/boot button (see USAGE).
-	-	Connect  PTM switch between pin 3 of the main GPIO header and ground, this is the stop button (see USAGE).
+	-	Connect a PTM switch between pin 3 of the main GPIO header and ground, this is the stop button (see USAGE).
 
 Configure timelapse
 -------------------
 
-12.  Configure delay between timelapse captures, this is set in [start_timelapse.sh](https://github.com/DanNixon/FP_StreamTimelapse/blob/master/stream_tl/start_timelapse.sh), by default it is set to 5000ms.
-13.	Configure timelapse image filenames, this can be set in [start_timelapse.sh](https://github.com/DanNixon/FP_StreamTimelapse/blob/master/stream_tl/start_timelapse.sh), where ```%d``` is the frame number (this is very important, if the filename does not have a %d the same file will be overwritten every capture)
+12.  Configure delay between timelapse captures, this is set in [start_timelapse.sh](https://github.com/DanNixon/FP_StreamTimelapse/blob/master/stream_tl/start_timelapse.sh), by default it is set to 30000ms.
+13.	Configure timelapse image filenames, this can be set in [start_timelapse.sh](https://github.com/DanNixon/FP_StreamTimelapse/blob/master/stream_tl/start_timelapse.sh), where ```%d``` is the frame number (important: if the filename does not have a %d the same file will be overwritten every capture)
 14.	Configure GPS options:
 	-	GPS can be enabled/disabled by editing the ```USE_GPS``` line of start_timelapse.sh
 	-	To record GPS data only set min capture distance in start_timelapse.sh to 0
@@ -87,12 +87,11 @@ Optional Stuff
 Notes
 -----
 
-You may wish to disable the camera LED when you have verified that the installation is working, this can be done by editing ```/boot/config.txt``` and adding the line ```disable_camera_led=1```.
+You may wish to disable the camera LED when you have verified that the installation is working, this can be done by editing ```/boot/config.txt``` and adding the line ```disable_camera_led=1```, this helps to remove any visual defects on the image caused by light from the LED entering the bubble scope.
 
 For both 5 and 6, options are passed to the ```raspistill``` command and control the image size and effects/filters.
 
 - -n = no preview
 - -h, -w = height and width
-- -tl = timelapse interval, in this case this is used to update the ```s_frame.jpg``` file which is used for the MJPEG stream
 - Full raspicam/raspistill docs [here](https://github.com/raspberrypi/userland/blob/master/host_applications/linux/apps/raspicam/README.md)
 - Better GPS setup instruction can be found [here](http://learn.adafruit.com/adafruit-ultimate-gps-on-the-raspberry-pi) (specific to Adafruit module)
