@@ -14,8 +14,8 @@ function file_exists(url)
 
 function check_file() {
 	var filename = document.getElementById("filename").innerText;
-	var tl_url = "./tl_exports/" + filename;
-	if(file_exists(tl_url)) {
+	var tl_url = "tl_exports/" + filename;
+	if(file_exists(host + tl_url)) {
 		document.getElementById("filename").innerHTML = "<a href='" + tl_url + "'>Download Timelapse</a>";
 	}
 }
@@ -23,9 +23,10 @@ function check_file() {
 function send_tl_request(tl_path) {
 	var url = host + "generate_video.php?";
 	url += ("tl=" + tl_path);
-	url += ("&l_lim=" + document.getElementById("l-lim").value);
-	url += ("&u_lim=" + document.getElementById("u-lim").value);
+	url += ("&ll=" + document.getElementById("l-lim").value);
+	url += ("&ul=" + document.getElementById("u-lim").value);
 	url += ("&width=" + document.getElementById("px-w").value);
+	url += ("&filename=" + document.getElementById("filename-s").value);
 	console.log(url);
 	window.location.replace(url);
 }
@@ -69,14 +70,19 @@ if(window.addEventListener) {
 <p>
 	Lower frame limit: <input type="text" size="3" id="l-lim" value="<?php if(isset($_GET['ll'])) { echo $_GET['ll']; } else { echo 0; }?>"><br />
 	Upper frame limit: <input type="text" size="3" id="u-lim" value="<?php if(isset($_GET['ul'])) { echo $_GET['ul']; } else { if(isset($_GET['ll'])) { echo intval($_GET['ll']) + 200; } else { echo 200; }}?>"><br />
-	Output video width: <input type="text" size="3" id="px-w" value="2000">
+	Output video width: <input type="text" size="3" id="px-w" value="2000"><br />
+	Output video filename: <input type="text" id="filename-s" value="<?php echo sprintf("tl_%d.mp4", time()) ?>">
 </p>
 <p id="gen_orig">Generate Orignal Timelapse</p>
 <p id="gen_equi">Generate Equi Timelapse</p>
 <?php
 if(isset($_GET['tl'])) {
-	$tl_filename = sprintf("tl_%d.mp4", time());
-	exec('/var/www/tl_gen.sh '.$_GET['l_lim'].' '.$_GET['u_lim'].' /var/www/tl_frames'.$_GET['tl'].' "/var/www/tl_exports/'.$tl_filename.'" '.$_GET['width'].' > /dev/null &');
+	if(empty($_GET['filename'])) {
+		$tl_filename = sprintf("tl_%d.mp4", time());
+	} else {
+		$tl_filename = $_GET['filename'];
+	}
+	exec('/var/www/tl_gen.sh '.$_GET['ll'].' '.$_GET['ul'].' /var/www/tl_frames'.$_GET['tl'].' "/var/www/tl_exports/'.$tl_filename.'" '.$_GET['width'].' > /dev/null &');
 	echo("<p id='filename'>".$tl_filename."</p>");
 }
 ?>
