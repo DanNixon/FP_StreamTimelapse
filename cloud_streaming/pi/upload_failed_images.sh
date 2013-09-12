@@ -14,7 +14,7 @@ for file in tl_images/original/*.jpg ; do
 	fi
 done
 
-echo "Uplaoding equis"
+echo "Uploading equis"
 for file in tl_images/equi/*.jpg ; do
 	echo "Uploading $file"
 	python tlUpload.py "$file"
