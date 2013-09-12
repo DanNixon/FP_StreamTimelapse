@@ -7,7 +7,7 @@ Also included is a sample web page which allows viewing an unwrapped stream and 
 
 This also allows uploading of the timelapse frames to a server and having the server create the timelaspe video, this simplifies the process of exporting content form the Pi and allows the PI to capture for a longer period of time (assuming a stable internet connection is available) as frames that have been uploaded will be automatically deleted.
 
-A CSV log of the GPS data is also stored in ```gps.log``` which is added to on every upload of a streaming frame.
+A CSV log of the GPS data is also stored in ```gps.log``` which is added to on every upload of a streaming frame and can be viewed on a Google Map.
 
 Requirements
 ------------
@@ -31,9 +31,11 @@ Usage
 
 Browse to the root of the server to see the sample streaming page.
 
-To export a timelapse browse to ```timelapse.php``` you can then select to export either a timelaspe using the original frames or equirectangular images, once conversion has completed you will be able to download the MP4 video.
+To export a timelapse browse to ```generate_video.php``` you can then select to export either a timelaspe using the original frames or equirectangular images, once conversion has completed you will be able to download the MP4 video.
 
 Browse to ```timelapse_viewer.html``` to view the saved timelapse frames.
+
+Browse to ```gps_log_viewer.html``` to view stored GPS data.
 
 The ```uplaod_failed_images.sh``` script can be used to upload any images that have failed to automatically upload (due to network errors for example).
 
