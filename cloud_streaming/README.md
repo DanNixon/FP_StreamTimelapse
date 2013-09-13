@@ -26,6 +26,8 @@ In addition to the general requirements:
 	-	```ffmpeg```
 	-	```libavcodec-extra-53``` (on Ubuntu server 12.04)
 	-	```convert```, part of [ImageMagick](http://www.imagemagick.org/)
+	-	```redist```, one of Fred's ImageMagick [scripts](http://www.fmwconcepts.com/imagemagick/redist/)
+	-	```bc```, required by ```redist``` (not installed as standard on Ubuntu server I found)
 
 Usage
 -----

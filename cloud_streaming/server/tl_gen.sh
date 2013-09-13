@@ -19,7 +19,8 @@ done
 if [ "$7" == "1" ]; then
 	for f in "$4"_frames/*
 	do
-		convert $f -equalize "$f"
+		convert "$f" -equalize "$f"
+#		./redist -s gaussian 10,5,40 "$f" "$f"
 	done
 fi
 
