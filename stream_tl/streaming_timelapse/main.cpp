@@ -18,11 +18,11 @@
 using namespace std;
 using namespace cv;
 
-const char *rs_tl_args = "-n -w 2000 -h 2000 -awb sun -ex backlight -ev -2 -mm matrix --exif EXIF.MakerNote=BubbleScopeTimelapseFrame";
-const char *rs_strm_args = "-n -th 0:0:0 -w 400 -h 400 -awb sun -ex backlight -ev -4 -mm matrix";
-const int stream_delay = 1000;
+const char *rs_tl_args = "-w 2000 -h 2000 -mm matrix --exif EXIF.MakerNote=BubbleScopeTimelapseFrame";
+const char *rs_strm_args = "-th 0:0:0 -w 400 -h 400 -mm matrix";
+const int stream_delay = 5000;
 const int min_tl_delay = 5000; //>500
-const int tl_cap_run_in = 80; //>50, delay between starting camera in stills mode and taking image
+const int tl_cap_run_in = 1000; //>50, delay between starting camera in stills mode and taking image
 const char *frame_location = "s_frame.jpg";
 const char *img_count_filename = "last_frame_no.log";
 
@@ -34,7 +34,7 @@ float last_lat = 0.0f;
 float last_long = 0.0f;
 char *post_tl_cmd;
 
-//Safely terminated the application
+//Safely terminate the application
 void terminate(int arg)
 {
     cout<<"Got SIGTERM, will now terminate"<<endl;

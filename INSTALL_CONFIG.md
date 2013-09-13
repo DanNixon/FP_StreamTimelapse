@@ -5,10 +5,10 @@ Requirements
 ------------
 
 1.	Install/obtain/configure the following:
-	-	[cmake](http://www.cmake.org) ```cmake```
-	-	[OpenCV](http://opencv.willowgarage.com) ```libopencv-core2.3```, ```libopencv-core-dev```, ```libopencv-dev```, ```libopencv-imgproc2.3``` (used for equi unwrap)
-	-	[gpsd](http://www.catb.org/gpsd) ```gpsd```, ```libgps-dev```, ```libgps20```, ```python-gps``` (for communication between software and GPS hardware)
-	-	[Exiv2](http://www.exiv2.org/index.html) ```libexiv2-12```, ```libexiv2-dev``` (C++ library for EXIF data read/write)
+	-	[CMake](http://www.cmake.org): ```cmake```
+	-	[OpenCV](http://opencv.willowgarage.com): ```libopencv-core2.3```, ```libopencv-core-dev```, ```libopencv-dev```, ```libopencv-imgproc2.3``` (used for equi unwrap)
+	-	[GPSd](http://www.catb.org/gpsd): ```gpsd```, ```libgps-dev```, ```libgps20```, ```python-gps``` (for communication between software and GPS hardware)
+	-	[Exiv2](http://www.exiv2.org/index.html): ```libexiv2-12```, ```libexiv2-dev``` (C++ library for EXIF data read/write)
 	-	[mjpg-streamer](http://sourceforge.net/projects/mjpg-streamer/) (used to create MJPG stream, included in this repo pre-configured)
 	-	Camera module adapted for variable focus (glue on lens screw removed)
 	-	"Large" SD card (timelapse capturing every minute should run for 7 days happily on a 32GB card)
