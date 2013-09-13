@@ -180,8 +180,32 @@
 		gps_path.setPath(points);
 	}
 
+	function reg_events() {
+		var alt_unit = document.getElementById("a-unit");
+		if(alt_unit.addEventListener) {
+			alt_unit.addEventListener("click", change_alt_unit);
+		} else {
+			alt_unit.attachEvent("click", change_alt_unit);
+		}
+		
+		var speed_unit = document.getElementById("s-unit");
+		if(speed_unit.addEventListener) {
+			speed_unit.addEventListener("click", change_speed_unit);
+		} else {
+			speed_unit.attachEvent("click", change_speed_unit);
+		}
+	}
+
 	google.maps.event.addDomListener(window, 'load', initialize);
 	self.setInterval(function(){update_map()}, 1000);
+	
+	if(window.addEventListener) {
+		window.addEventListener("load", reg_events, false);
+	} else if(window.attachEvent) {
+		window.attachEvent("onload", reg_events);
+	} else {
+		document.addEventListener("load", reg_events, false);
+	}
 </script>
 </head>
 <body>
@@ -192,9 +216,9 @@
 <p>
 Latitude: <span id="lat"></span>&deg;<br />
 Longitude: <span id="lon"></span>&deg;<br />
-Speed: <span id="speed"></span> <a href="#" onClick="change_speed_unit()"><span id="s-unit">ms-1</span></a><br />
+Speed: <span id="speed"></span> <a href="javascript:void()"></a><span id="s-unit">ms-1</span></a><br />
 Heading: <span id="track"></span>&deg; (<span id="c-dir"> </span>)<br />
-Altitude: <span id="alti"></span> <a href="#" onClick="change_alt_unit()"><span id="a-unit">m</span></a><br />
+Altitude: <span id="alti"></span> <a href="javascript:void()"><span id="a-unit">m</span></a><br />
 Timestamp: <span id="time"></span>
 </p>
 <input type="checkbox" id="map-follow" checked="checked">Centre map on marker<br />

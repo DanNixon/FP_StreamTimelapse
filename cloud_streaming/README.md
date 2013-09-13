@@ -25,6 +25,7 @@ In addition to the general requirements:
 	-	```apache2```
 	-	```ffmpeg```
 	-	```libavcodec-extra-53``` (on Ubuntu server 12.04)
+	-	```convert```, part of [ImageMagick](http://www.imagemagick.org/)
 
 Usage
 -----
@@ -36,6 +37,8 @@ The "View Live Stream" page shows the current equi stream from the Pi as well as
 "Web Timelapse Viewer" allows viewing timelapse frames stored on the server and GPS position data associated with them.
 
 "Export Timelapse Videos" allows you to export either a timelaspe using the original frames or equirectangular images, once conversion has completed you will be able to download the MP4 video.
+
+When exporting timelapse videos the "Use histogram equalization" may be used to reduce the effects of bad exposure or colour balance by the Pi camera, however this will slightly reduce the overall image quality of the frames which are most affected.
 
 "View GPS Log on Map" is used to view stored GPS data displayed using a Polyline which shows further data (altitude, heading, speed, time) when the mouse is moved over the line.
 

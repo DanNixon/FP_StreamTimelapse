@@ -28,6 +28,11 @@ function send_tl_request(tl_path) {
 	url += ("&width=" + document.getElementById("px-w").value);
 	url += ("&filename=" + document.getElementById("filename-s").value);
 	url += ("&frate=" + document.getElementById("framerate-s").value);
+	if(document.getElementById("heq").checked) {
+		url += ("&histeq=1");
+	} else {
+		url += ("&histeq=0");
+	}
 	console.log(url);
 	window.location.replace(url);
 }
@@ -73,10 +78,11 @@ if(window.addEventListener) {
 	Upper frame limit: <input type="text" size="3" id="u-lim" value="<?php if(isset($_GET['ul'])) { echo $_GET['ul']; } else { if(isset($_GET['ll'])) { echo intval($_GET['ll']) + 200; } else { echo 200; }}?>"><br />
 	Output video width: <input type="text" size="3" id="px-w" value="<?php if(isset($_GET['width'])) { echo $_GET['width']; } else { echo 2000; }?>"><br />
 	Frame rate: <input type="text" size="3" id="framerate-s" value="<?php if(isset($_GET['frate'])) { echo $_GET['frate']; } else { echo 10; }?>"><br />
-	Output video filename: <input type="text" id="filename-s" value="<?php echo sprintf("tl_%d.mp4", time()) ?>">
+	Output video filename: <input type="text" id="filename-s" value="<?php echo sprintf("tl_%d.mp4", time()) ?>"><br />
+	<input type="checkbox" id="heq">Use histogram equalization (may improve light/colour on badly exposed frames at the exepnse of overall quality)
 </p>
-<p id="gen_orig">Generate Orignal Timelapse</p>
-<p id="gen_equi">Generate Equi Timelapse</p>
+<button id="gen_orig">Generate Orignal Timelapse</button>
+<button id="gen_equi">Generate Equi Timelapse</button>
 <?php
 if(isset($_GET['tl'])) {
 	if(empty($_GET['filename'])) {
@@ -84,7 +90,7 @@ if(isset($_GET['tl'])) {
 	} else {
 		$tl_filename = $_GET['filename'];
 	}
-	exec('/var/www/tl_gen.sh '.$_GET['ll'].' '.$_GET['ul'].' /var/www/tl_frames'.$_GET['tl'].' "/var/www/tl_exports/'.$tl_filename.'" '.$_GET['width'].' '.$_GET['frate'].' > /dev/null &');
+	exec('/var/www/tl_gen.sh '.$_GET['ll'].' '.$_GET['ul'].' /var/www/tl_frames'.$_GET['tl'].' "/var/www/tl_exports/'.$tl_filename.'" '.$_GET['width'].' '.$_GET['frate'].' '.$_GET['histeq'].' > /dev/null &');
 	echo("<p id='filename'>".$tl_filename."</p>");
 }
 ?>

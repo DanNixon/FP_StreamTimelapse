@@ -353,6 +353,20 @@ $(document).ready(function() {
 			} else {
 				show_path_c.attachEvent("click", gen_tl_from_frame);
 			}
+			
+			var speed_unit_sel = document.getElementById("s-unit");
+			if(speed_unit_sel.addEventListener) {
+				speed_unit_sel.addEventListener("click", change_speed_unit);
+			} else {
+				speed_unit_sel.attachEvent("click", change_speed_unit);
+			}
+			
+			var alt_unit_sel = document.getElementById("a-unit");
+			if(alt_unit_sel.addEventListener) {
+				alt_unit_sel.addEventListener("click", change_alt_unit);
+			} else {
+				alt_unit_sel.attachEvent("click", change_alt_unit);
+			}
 		}
 
 		google.maps.event.addDomListener(window, 'load', initialize);
@@ -374,9 +388,9 @@ $(document).ready(function() {
 		<p>
 			Latitude: <span id="lat"></span>&deg;<br />
 			Longitude: <span id="lon"></span>&deg;<br />
-			Speed: <span id="speed"></span> <a href="#" onClick="change_speed_unit()"><span id="s-unit">ms-1</span></a><br />
+			Speed: <span id="speed"></span> <a href="javascript:null()"><span id="s-unit">ms-1</span></a><br />
 			Heading: <span id="track"></span>&deg; (<span id="c-dir"> </span>)<br />
-			Altitude: <span id="alti"></span> <a href="#" onClick="change_alt_unit()"><span id="a-unit">m</span></a><br />
+			Altitude: <span id="alti"></span> <a href="javascript:null()"><span id="a-unit">m</span></a><br />
 			Time: <span id="time"></span><br />
 			Date: <span id="date"></span><br />
 			Frame: <span id="frame_no"></span>
@@ -394,7 +408,7 @@ $(document).ready(function() {
 		<input type="checkbox" id="map-follow" name="map-follow" checked="checked">Centre map on marker<br />
 		<input type="checkbox" id="show-path" name="show-path" checked="checked">Show path<br />
 		<button id="clear-path-b">Clear Path</button>
-		<p id="gen_from_here">Generate video starting at this frame</p>
+		<p><a href="javascript:null()" id="gen_from_here">Generate video starting at this frame</a></p>
 	</div>
   </body>
 </html>
