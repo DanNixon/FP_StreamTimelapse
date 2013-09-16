@@ -31,7 +31,7 @@ int main (int argc, char **argv)
     unwrap_image = createEquiRectangularUnwrap(original_image,
                    1000,
                    0.5f, 0.5f,
-                   0.45f, 0.85f,
+                   0.38f, 0.86f,
                    ((float) 180 * DEG_2_RAD),
                    (ratio_i * ratio_coeff));
 
