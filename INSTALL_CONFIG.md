@@ -13,6 +13,7 @@ Requirements
 	-	Camera module adapted for variable focus (glue on lens screw removed)
 	-	"Large" SD card (timelapse capturing every minute should run for 7 days happily on a 32GB card)
 	-	Suitable GPS module compatible with gpsd and with fix indicator output (e.g. [Adafruit Ultimate GPS](http://www.adafruit.com/products/746))
+	-	[GPS antenna](http://www.adafruit.com/products/960) and any [adapters](http://www.adafruit.com/products/851) needed
 	-	GPIO cable (either the [standalone cable](http://uk.farnell.com/adafruit-industries/862/gpio-ribbon-cable-26-pin-raspberry/dp/2215033) or [breadboard breakout](http://uk.farnell.com/adafruit-industries/914/pi-cobbler-breakout-kit-raspberry/dp/2215039) type)
 	-	Breadboard/prototyping board (such as [this](http://www.ebay.co.uk/itm/Mini-Prototype-Breadboard-for-Arduino-400-Tie-Point-Solderless-Modular-Board-/140711857203) one)
 	-	Breadboard patch cables (such as [these](http://www.ebay.co.uk/itm/75-Jumper-Cables-for-Solderless-Breadboard-Arduino-/171108244207))
