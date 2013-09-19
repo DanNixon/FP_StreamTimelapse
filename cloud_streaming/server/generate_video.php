@@ -79,7 +79,7 @@ if(window.addEventListener) {
 	Output video width: <input type="text" size="3" id="px-w" value="<?php if(isset($_GET['width'])) { echo $_GET['width']; } else { echo 2000; }?>"><br />
 	Frame rate: <input type="text" size="3" id="framerate-s" value="<?php if(isset($_GET['frate'])) { echo $_GET['frate']; } else { echo 10; }?>"><br />
 	Output video filename: <input type="text" id="filename-s" value="<?php echo sprintf("tl_%d.mp4", time()) ?>"><br />
-	<input type="checkbox" id="heq">Use histogram redistribution (may improve light/colour on badly exposed frames at the exepnse of overall quality)
+	<input type="checkbox" id="heq">Use histogram redistribution (may improve light/colour on badly exposed frames at the expense of overall quality)
 </p>
 <button id="gen_orig">Generate Orignal Timelapse</button>
 <button id="gen_equi">Generate Equi Timelapse</button>
