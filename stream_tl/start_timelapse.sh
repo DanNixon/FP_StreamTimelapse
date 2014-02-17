@@ -25,7 +25,7 @@ echo "Starting GPS"
 screen -L -d -m -S gps python ./get_gps.py ./gps.temp
 
 echo "Starting MJPEG server"
-screen -L -d -m -S mjpg_stream python ./mjpg-streamer/start.sh
+screen -L -d -m -S mjpg_stream ./mjpg-streamer/start.sh
 
 echo "Starting capture"
 ##ARGS: [output folder] [image name (%d is frame number)] [timelapse delay ms] [capture time ms (0 for capture untill SIGTERM)] [minimum capture distance] [use GPS] [command to ececute after image processing]
